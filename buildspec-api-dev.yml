@@ -1,0 +1,31 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      python: 3.8
+    commands:
+      - echo Getting Started
+
+  pre_build:
+    commands:
+      - echo Prebuild started on `date`
+      - apt-get update
+      - apt-get -y install python3-venv
+      - apt-get -y install libssl-dev
+      - curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+      - export PATH=$PATH:$HOME/.poetry/bin
+      - python -m venv venv
+      - . venv/bin/activate
+      - poetry install --no-dev
+      - cp appspec-api-dev.yml appspec.yml
+  build:
+    commands:
+      - echo Build started on `date`
+  post_build:
+    commands:
+      - aws s3 cp "s3://inference-params-test/.env" ".env"
+      - aws s3 cp "s3://inference-params-test/.env.test" ".env.test"
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - "**/*"

@@ -1,0 +1,62 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a set of commands using the runners shell
+      # based on https://www.youtube.com/watch?v=G6nBM3NxBDc
+      - name: Install
+        run: |
+          # docker permissions
+          sudo su - ubuntu
+          sudo chmod 666 /var/run/docker.sock
+
+          sudo apt install -y python3.8-venv
+          python3 -m venv venv
+          . venv/bin/activate
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+          export PATH=$PATH:$HOME/.poetry/bin
+          poetry install
+          sudo apt install -y awscli
+
+          # https://dev.to/shree_j/how-to-install-and-run-psql-using-docker-41j2
+          # https://codeburst.io/get-started-with-rabbitmq-on-docker-4428d7f6e46b
+          # docker rm -f my-postgresql
+          # docker rm -f my-rabbit
+          # docker run --name my-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
+          # docker run --hostname my-rabbit -p 15672:15672 -p 5672:5672 -d rabbitmq:3-management
+
+      - name: Test
+        run: |
+          # https://docs.docker.com/engine/install/linux-postinstall/
+          sudo getent group docker || sudo groupadd docker
+          sudo usermod -aG docker ubuntu
+          newgrp docker
+
+          sudo su - ubuntu
+          docker run hello-world
+          . venv/bin/activate
+          aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"
+          python -m pytest -s
