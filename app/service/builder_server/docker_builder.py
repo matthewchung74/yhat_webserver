@@ -295,7 +295,7 @@ def test_build_docker(
 
         # same as curl -XPOST "http://localhost:9000/2015-03-31/functions/function/invocations" -d '{"body":{"text input":"movie was awful"}}'
         # used for local lambda test
-        url = f"http://localhost:{port}/2015-03-31/functions/function/invocations"
+        url = f"http://host.docker.internal:{port}/2015-03-31/functions/function/invocations"
         response = requests.post(
             url, data=json.dumps({"body": {"get_inference_input_json": 1}})
         )

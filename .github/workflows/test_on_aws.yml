@@ -33,13 +33,9 @@ jobs:
           sudo su - ubuntu
           sudo chmod 666 /var/run/docker.sock
 
-          sudo apt install -y python3.8-venv
-          python3 -m venv venv
-          . venv/bin/activate
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
-          export PATH=$PATH:$HOME/.poetry/bin
-          poetry install
-          sudo apt install -y awscli
+          aws s3 cp "s3://yhat-param-test/.env.dev" ".env"
+          aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"
+          docker build -t yhat_webserver -f Dockerfile.local .
 
           # https://dev.to/shree_j/how-to-install-and-run-psql-using-docker-41j2
           # https://codeburst.io/get-started-with-rabbitmq-on-docker-4428d7f6e46b
@@ -54,9 +50,14 @@ jobs:
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
+          docker run --name test \
+            --privileged=true \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            -v /Users/mattc/Development/yhat_projects/yhat_webserver/app:/app/app \
+            yhat_webserver:latest \
+            python -m pytest -s
 
-          sudo su - ubuntu
-          docker run hello-world
-          . venv/bin/activate
-          aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"
-          python -m pytest -s
+          # sudo su - ubuntu
+          # docker run hello-world
+          # . venv/bin/activate
+          # aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"

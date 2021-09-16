@@ -1,0 +1,46 @@
+# https://www.youtube.com/watch?v=qQNGw_m8t0Y
+
+FROM ubuntu:latest
+
+WORKDIR /app
+
+RUN apt update && apt upgrade -y
+RUN apt install -y apt-transport-https ca-certificates curl software-properties-common
+RUN apt install -y -q build-essential python3-venv git
+
+RUN apt install -y nodejs npm 
+RUN npm install pm2 -g
+
+ENV VIRTUAL_ENV=venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+RUN pip install poetry
+
+RUN pip install -U pip setuptools wheel requests
+RUN pip install gunicorn uvloop httptools
+RUN pip install uvicorn[standard]
+
+ENV YOUR_ENV=${YOUR_ENV} \
+    PYTHONFAULTHANDLER=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=random \
+    PIP_NO_CACHE_DIR=off \
+    PIP_DISABLE_PIP_VERSION_CHECK=on \
+    PIP_DEFAULT_TIMEOUT=100
+
+COPY pyproject.toml pyproject.toml
+COPY poetry.lock poetry.lock
+RUN python -m pip install --upgrade pip
+RUN poetry export -f requirements.txt --output requirements.txt  --without-hashes --dev
+RUN pip install -r requirements.txt
+
+COPY .env .env
+RUN sed -i -r "s/localhost/host.docker.internal/g" .env
+COPY .env.test .env.test 
+RUN sed -i -r "s/localhost/host.docker.internal/g" .env.test
+COPY .vscode .vscode
+
+COPY app /app/app
+
+EXPOSE 8000
