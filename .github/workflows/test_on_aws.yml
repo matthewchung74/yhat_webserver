@@ -53,11 +53,5 @@ jobs:
           docker run --name test \
             --privileged=true \
             -v /var/run/docker.sock:/var/run/docker.sock \
-            -v /Users/mattc/Development/yhat_projects/yhat_webserver/app:/app/app \
             yhat_webserver:latest \
             python -m pytest -s
-
-          # sudo su - ubuntu
-          # docker run hello-world
-          # . venv/bin/activate
-          # aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"
