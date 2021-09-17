@@ -50,8 +50,10 @@ jobs:
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
-          docker run --name test \
+          docker run \
             --privileged=true \
+            --add-host host.docker.internal:host-gateway \
             -v /var/run/docker.sock:/var/run/docker.sock \
+            -v /Users/mattc/Development/yhat_projects/yhat_webserver/app:/app/app \
             yhat_webserver:latest \
             python -m pytest -s
