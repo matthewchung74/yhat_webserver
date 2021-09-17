@@ -46,7 +46,6 @@ jobs:
 
       - name: Test
         run: |
-          # https://docs.docker.com/engine/install/linux-postinstall/
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
