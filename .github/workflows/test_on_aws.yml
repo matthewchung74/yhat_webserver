@@ -49,11 +49,10 @@ jobs:
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
-          docker run \
+          docker run --rm \
             --privileged=true \
             --add-host host.docker.internal:host-gateway \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p 22 \
             yhat_webserver:latest \
-            python -m pytest -s \
-            --rm
+            python -m pytest -s
