@@ -55,4 +55,5 @@ jobs:
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p 22 \
             yhat_webserver:latest \
-            python -m pytest -s
+            python -m pytest -s \
+            --rm
