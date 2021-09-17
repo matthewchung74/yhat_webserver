@@ -26,4 +26,4 @@ RUN true
 COPY ./app/.vscode/ /var/task/.vscode/
 RUN true
 COPY ./app/.env /var/task/.env
-RUN pip install --no-cache-dir debugpy
+RUN python3 -m pip install --no-cache-dir debugpy

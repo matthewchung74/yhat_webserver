@@ -11,7 +11,6 @@ import pytest
 from app.helpers.settings import settings
 from app.routers import user
 
-
 @pytest.fixture
 async def client():
     async with TestClient(app) as client:

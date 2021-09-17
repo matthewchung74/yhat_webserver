@@ -38,6 +38,7 @@ async def client():
 
 @pytest.mark.asyncio
 def test_s3_cleanup():
+    
     async def async_main():
         await empty_queue(settings.RABBIT_START_QUEUE)
         try:

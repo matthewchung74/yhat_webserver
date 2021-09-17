@@ -11,15 +11,15 @@ RUN apt install -y -q build-essential python3-venv git
 RUN apt install -y nodejs npm 
 RUN npm install pm2 -g
 
-ENV VIRTUAL_ENV=venv
+ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-RUN pip install poetry
+RUN python3 -m pip install poetry
 
-RUN pip install -U pip setuptools wheel requests
-RUN pip install gunicorn uvloop httptools
-RUN pip install uvicorn[standard]
+RUN python3 -m pip install -U pip setuptools wheel requests
+RUN python3 -m pip install gunicorn uvloop httptools
+RUN python3 -m pip install uvicorn[standard]
 
 ENV YOUR_ENV=${YOUR_ENV} \
     PYTHONFAULTHANDLER=1 \
@@ -31,9 +31,9 @@ ENV YOUR_ENV=${YOUR_ENV} \
 
 COPY pyproject.toml pyproject.toml
 COPY poetry.lock poetry.lock
-RUN python -m pip install --upgrade pip
+RUN python3 -m pip install --upgrade pip
 RUN poetry export -f requirements.txt --output requirements.txt  --without-hashes --dev
-RUN pip install -r requirements.txt
+RUN python3 -m pip install -r requirements.txt
 
 COPY .env .env
 RUN sed -i -r "s/localhost/host.docker.internal/g" .env
@@ -42,5 +42,3 @@ RUN sed -i -r "s/localhost/host.docker.internal/g" .env.test
 COPY .vscode .vscode
 
 COPY app /app/app
-
-EXPOSE 8000

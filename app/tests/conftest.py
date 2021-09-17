@@ -8,11 +8,11 @@ foo = load_dotenv(dotenv_path=dotenv_path, override=True)
 from app.service.builder_server import builder_server
 from multiprocessing import Process
 import pytest
+from logging import debug
 
 my_storage: dict = {}
 
-# needs to be below dotenv, do not autoformat
-
+from logging import debug
 
 @pytest.fixture(scope="module")
 def storage():

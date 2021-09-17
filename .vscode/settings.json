@@ -1,5 +1,5 @@
 {
-    "python.defaultInterpreterPath": "/Users/mattc/Library/Caches/pypoetry/virtualenvs/inference-server-GQutIvOt-py3.8",
+    "python.defaultInterpreterPath": "/opt/venv/bin/python",
     "git.ignoreLimitWarning": true,
     "jupyter.debugJustMyCode": false,
     "python.linting.mypyEnabled": true,
