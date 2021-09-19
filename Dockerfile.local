@@ -35,10 +35,10 @@ RUN python3 -m pip install --upgrade pip
 RUN poetry export -f requirements.txt --output requirements.txt  --without-hashes --dev
 RUN python3 -m pip install -r requirements.txt
 
-COPY .env .env
-RUN sed -i -r "s/localhost/host.docker.internal/g" .env
-COPY .env.test .env.test 
-RUN sed -i -r "s/localhost/host.docker.internal/g" .env.test
+COPY .env.dev .env
+# RUN sed -i -r "s/localhost/host.docker.internal/g" .env
+# COPY .env.test .env.test 
+# RUN sed -i -r "s/localhost/host.docker.internal/g" .env.test
 COPY .vscode .vscode
 
 COPY app /app/app
