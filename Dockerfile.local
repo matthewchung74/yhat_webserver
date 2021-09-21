@@ -1,7 +1,7 @@
 # https://www.youtube.com/watch?v=qQNGw_m8t0Y
 
 # FROM ubuntu:latest
-FROM public.ecr.aws/lts/ubuntu:20.04
+FROM public.ecr.aws/lts/ubuntu:20.04 AS builder
 
 WORKDIR /app
 
@@ -36,12 +36,14 @@ RUN python3 -m pip install --upgrade pip
 RUN poetry export -f requirements.txt --output requirements.txt  --without-hashes --dev
 RUN python3 -m pip install -r requirements.txt
 
-COPY .env .env
 # RUN sed -i -r "s/localhost/host.docker.internal/g" .env
 # COPY .env.test .env.test 
 # RUN sed -i -r "s/localhost/host.docker.internal/g" .env.test
 COPY .vscode .vscode
 
 COPY app /app/app
+
+FROM builder as tester
+COPY .env.test .env.test
 
 # CMD ["pm2", "start", "python -m uvicorn app.api:app  --host 0.0.0.0 --port 8000", "--no-daemon"]
