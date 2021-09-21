@@ -33,8 +33,7 @@ jobs:
           sudo su - ubuntu
           sudo chmod 666 /var/run/docker.sock
 
-          aws s3 cp "s3://yhat-param-test/.env.dev" ".env"
-          aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"
+          aws s3 cp "s3://yhat-param-test/.env.test" ".env.test"
           docker build -t yhat_webserver -f Dockerfile.local .
 
           # https://dev.to/shree_j/how-to-install-and-run-psql-using-docker-41j2
