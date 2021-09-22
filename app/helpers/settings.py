@@ -3,11 +3,11 @@ import os
 from pydantic import BaseSettings
 
 
-secret_key = os.getenv("SECRET_KEY") if os.getenv("SECRET_KEY") else "abc"
+# secret_key = os.getenv("SECRET_KEY") if os.getenv("SECRET_KEY") else "abc"
 
 
 class Settings(BaseSettings):
-    SECRET_KEY = secret_key
+    # SECRET_KEY = secret_key
     ACCESS_TOKEN_EXPIRE_SECONDS: int = 60 * 60 * 24
     SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
     SQLALCHEMY_DATABASE_SSL = False
