@@ -53,14 +53,8 @@ jobs:
           newgrp docker
           docker run --rm \
             --privileged=true \
+            --env-file=.env.test \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p 22 \
             yhat_webserver:latest \
-            /bin/bash -c "python -m pytest -s"
-
-          docker run --rm \
-            --privileged=true \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -p 22 \
-            yhat_webserver:latest \
-            /bin/bash -c "python -m app.service.builder_server.builder_server"
+            /bin/bash -c "./deployment_scripts/run_tests.sh"
