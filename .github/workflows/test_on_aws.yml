@@ -53,7 +53,6 @@ jobs:
           newgrp docker
           docker run --rm \
             --privileged=true \
-            # --add-host host.docker.internal:host-gateway \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p 22 \
             yhat_webserver:latest \
