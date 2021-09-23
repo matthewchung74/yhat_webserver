@@ -37,15 +37,13 @@ RUN python3 -m pip install --upgrade pip
 RUN poetry export -f requirements.txt --output requirements.txt  --without-hashes --dev
 RUN python3 -m pip install -r requirements.txt
 
-# RUN sed -i -r "s/localhost/host.docker.internal/g" .env
-# COPY .env.test .env.test 
-# RUN sed -i -r "s/localhost/host.docker.internal/g" .env.test
 COPY .vscode .vscode
 
 COPY app /app/app
 
 FROM builder as tester
 COPY .env.test .env.test
+COPY ./deployment_scripts/run_tests.sh ./deployment_scripts/run_tests.sh
 
 FROM builder as fastapi
 CMD ["pm2", "start", "python -m uvicorn app.api:app  --host 0.0.0.0 --port 8000", "--no-daemon"]
