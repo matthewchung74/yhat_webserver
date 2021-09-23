@@ -11,7 +11,10 @@ def load():
     PARAM_STORE = os.getenv("PARAM_STORE")
     ssm_client = None
     if os.getenv("AWS_ACCESS_KEY") == None:
-        ssm_client = boto3.client("ssm")
+        ssm_client = boto3.client(
+            "ssm",
+            region_name=os.getenv("AWS_REGION_NAME"),
+        )
     else:
         ssm_client = boto3.client(
             "ssm",
