@@ -33,9 +33,10 @@ jobs:
           sudo su - ubuntu
           sudo chmod 666 /var/run/docker.sock
 
-          echo "PARAM_STORE=/local/env/settings" > .env.test
+          echo "PARAM_STORE=/dev/env/settings/test" > .env.test
           echo "AWS_REGION_NAME=us-west-2" >> .env.test
 
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c6h1o1s4
           DOCKER_BUILDKIT=1 docker build --target tester -t yhat_webserver -f Dockerfile .
 
           # aws s3 cp "s3://yhat-param-test/.env.test" ".env.test"
@@ -53,7 +54,7 @@ jobs:
           newgrp docker
           docker run --rm \
             --privileged=true \
-            --add-host host.docker.internal:host-gateway \
+            # --add-host host.docker.internal:host-gateway \
             -v /var/run/docker.sock:/var/run/docker.sock \
             -p 22 \
             yhat_webserver:latest \
