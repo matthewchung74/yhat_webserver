@@ -80,9 +80,8 @@ async def test_create_builds(client, storage, builder_job):
     if bool(os.getenv("TEST_ALL_MODELS")) == True:
         notenooks = [
             "yolov5/pretrained_pil_inference.ipynb",
-            # "yolov5/pretrained_cv2_inference.ipynb",
-            # "huggingface/imdb_classification_inference.ipynb",
-            # "huggingface/question_answering_inference.ipynb",
+            "huggingface/imdb_classification_inference.ipynb",
+            "huggingface/question_answering_inference.ipynb",
         ]
     else:
         notenooks = ["yolov5/unit_test_inference.ipynb"]

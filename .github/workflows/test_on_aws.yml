@@ -33,10 +33,12 @@ jobs:
           sudo su - ubuntu
           sudo chmod 666 /var/run/docker.sock
 
-          # aws s3 cp "s3://yhat-param-test/.env.test" ".env.test"
           echo "PARAM_STORE=/local/env/settings" > .env.test
+          echo "AWS_REGION_NAME=us-west-2" >> .env.test
+
           DOCKER_BUILDKIT=1 docker build --target tester -t yhat_webserver -f Dockerfile .
 
+          # aws s3 cp "s3://yhat-param-test/.env.test" ".env.test"
           # https://dev.to/shree_j/how-to-install-and-run-psql-using-docker-41j2
           # https://codeburst.io/get-started-with-rabbitmq-on-docker-4428d7f6e46b
           # docker rm -f my-postgresql
