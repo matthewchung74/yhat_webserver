@@ -26,7 +26,6 @@
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
-            "args": []
         },
     ]
 }

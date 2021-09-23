@@ -38,11 +38,10 @@ async def client():
 
 @pytest.mark.asyncio
 def test_s3_cleanup():
-    
     async def async_main():
-        await empty_queue(settings.RABBIT_START_QUEUE)
+        await empty_queue(settings.RABBIT_START_QUEUE_API)
         try:
-            bucket_key = os.getenv("AWS_BUILD_LOG_BUCKET")
+            bucket_key = settings.AWS_BUILD_LOG_BUCKET
             bucket = get_s3_client().Bucket(bucket_key)
             bucket.objects.all().delete()
         except Exception as e:
@@ -52,7 +51,7 @@ def test_s3_cleanup():
                 raise
 
         try:
-            bucket_key = os.getenv("AWS_REQUESTS_LOG_BUCKET")
+            bucket_key = settings.AWS_REQUESTS_LOG_BUCKET
             bucket = get_s3_client().Bucket(bucket_key)
             bucket.objects.all().delete()
         except Exception as e:

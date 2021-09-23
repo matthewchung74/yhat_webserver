@@ -19,9 +19,9 @@ class MessageState(str, Enum):
     Finished = "Finished"
 
 
-async def get_connection(loop):
+async def get_connection(host: str, loop):
     return await aio_pika.connect_robust(
-        f"{settings.RABBIT_HOST}",
+        url=host,
         loop=loop,
     )
 
@@ -29,9 +29,13 @@ async def get_connection(loop):
 async def empty_queue(queue_name: str):
     connection = None
     try:
-        connection = await get_connection(loop=asyncio.get_event_loop())
+        connection = await get_connection(
+            host=settings.RABBIT_HOST_API, loop=asyncio.get_event_loop()
+        )
         channel = await connection.channel()
-        queue = await channel.get_queue(settings.RABBIT_START_QUEUE)
+        queue = await channel.get_queue(settings.RABBIT_START_QUEUE_API)
+        await queue.delete(if_empty=False, if_unused=False)
+        queue = await channel.get_queue(settings.RABBIT_CANCEL_QUEUE_API)
         await queue.delete(if_empty=False, if_unused=False)
     except Exception as e:
         if str(type(e)) == "<class 'aiormq.exceptions.ChannelNotFoundEntity'>":

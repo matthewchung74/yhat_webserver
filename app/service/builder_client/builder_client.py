@@ -11,7 +11,7 @@ from asyncio.exceptions import CancelledError
 from aio_pika.message import DeliveryMode
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.helpers.settings import settings
+from app.helpers.settings import load_settings_async, settings
 from app.helpers.logger import get_log
 from app.db import schema
 from app.db import crud
@@ -25,15 +25,15 @@ logging.getLogger("aio_pika").setLevel(logging.ERROR)
 
 
 async def cancel_build(build_id: str):
-    connection = await get_connection(loop=asyncio.get_event_loop())
+    connection = await get_connection(
+        host=settings.RABBIT_HOST_BUILDER, loop=asyncio.get_event_loop()
+    )
     build_id = build_id.lower()
 
     async with connection:
-        routing_key = settings.RABBIT_CANCEL_QUEUE
+        routing_key = settings.RABBIT_CANCEL_QUEUE_API
         channel = await connection.channel()
-        cancel_queue = await channel.declare_queue(
-            settings.RABBIT_CANCEL_QUEUE, durable=True
-        )
+        cancel_queue = await channel.declare_queue(routing_key, durable=True)
 
         cancel_exchange = await channel.declare_exchange("cancel", ExchangeType.FANOUT)
         await cancel_queue.bind(cancel_exchange)
@@ -56,11 +56,16 @@ async def cancel_build(build_id: str):
 async def start_build(build_id: str, command: str = "start"):
     connection = None
     try:
-        connection = await get_connection(loop=asyncio.get_event_loop())
+        await load_settings_async()
+        from app.helpers.settings import settings
+
+        connection = await get_connection(
+            host=settings.RABBIT_HOST_API, loop=asyncio.get_event_loop()
+        )
         build_id = build_id.lower()
-        routing_key = settings.RABBIT_START_QUEUE
+        routing_key = settings.RABBIT_START_QUEUE_API
         channel = await connection.channel()
-        await channel.declare_queue(settings.RABBIT_START_QUEUE, durable=True)
+        await channel.declare_queue(settings.RABBIT_START_QUEUE_API, durable=True)
 
         consumer_queue = await channel.declare_queue(build_id, auto_delete=True)
 

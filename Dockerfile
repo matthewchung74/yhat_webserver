@@ -18,6 +18,7 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN python3 -m pip install poetry
 
+
 RUN python3 -m pip install -U pip setuptools wheel requests
 RUN python3 -m pip install gunicorn uvloop httptools
 RUN python3 -m pip install uvicorn[standard]

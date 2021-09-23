@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+from app.helpers.settings import settings
+
 from app.helpers.logger import get_log
 from fastapi import FastAPI
 from fastapi import WebSocket

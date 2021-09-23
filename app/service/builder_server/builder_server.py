@@ -72,8 +72,8 @@ cancel_list: List = []
 prefetch_count = 4
 build_count = 0
 
-ecr_repository_name = os.getenv("ECR_REPOSITORY_NAME")
-aws_account_id = os.getenv("AWS_ACCOUNT_ID")
+ecr_repository_name = settings.ECR_REPOSITORY_NAME
+aws_account_id = settings.AWS_ACCOUNT_ID
 
 engine = create_async_engine(
     settings.SQLALCHEMY_DATABASE_URI, echo=False, poolclass=NullPool
@@ -216,7 +216,9 @@ async def start_build_with_session(
         ecr_private_client = get_ecr_private_client()
         ecr_public_client = get_ecr_public_client()
 
-        rabbit_connection = await get_connection(loop=asyncio.get_event_loop())
+        rabbit_connection = await get_connection(
+            host=settings.RABBIT_HOST_BUILDER, loop=asyncio.get_event_loop()
+        )
         channel = await rabbit_connection.channel()
 
         tmp_dir = Path(f"/tmp/{build_id}")
@@ -639,12 +641,12 @@ async def main(loop):
 
         get_log(name=__name__).info(f"Starting API Builder")
 
-        connection = await get_connection(loop)
+        connection = await get_connection(host=settings.RABBIT_HOST_BUILDER, loop=loop)
         start_channel = await connection.channel()
         await start_channel.set_qos(prefetch_count=prefetch_count)
 
         start_queue = await start_channel.declare_queue(
-            settings.RABBIT_START_QUEUE,
+            settings.RABBIT_START_QUEUE_BUILDER,
             durable=True,
         )
 
@@ -652,7 +654,7 @@ async def main(loop):
 
         cancel_channel = await connection.channel()
         cancel_queue = await cancel_channel.declare_queue(
-            settings.RABBIT_CANCEL_QUEUE,
+            settings.RABBIT_CANCEL_QUEUE_BUILDER,
             durable=True,
         )
 
@@ -663,7 +665,7 @@ async def main(loop):
         await cancel_queue.consume(on_message, no_ack=False, timeout=60 * 30)
 
         get_log(name=__name__).info(
-            f"builder connected to {settings.RABBIT_HOST.split('@')[0]}://{settings.RABBIT_HOST.split('@')[-1]} listening for messages"
+            f"builder connected to {settings.RABBIT_HOST_BUILDER.split('@')[0]}://{settings.RABBIT_HOST_BUILDER.split('@')[-1]} listening for messages"
         )
 
         return connection

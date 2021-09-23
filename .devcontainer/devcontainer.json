@@ -5,7 +5,7 @@
 	// Sets the run context to one level up instead of the .devcontainer folder.
 	"context": "..",
 	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
-	"dockerFile": "../Dockerfile.local",
+	"dockerFile": "../Dockerfile",
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"terminal.integrated.automationShell.linux": "/bin/bash"
@@ -18,6 +18,7 @@
 	"forwardPorts": [
 		8000
 	],
+	"initializeCommand": "aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/c6h1o1s4",
 	// Uncomment the next line to run commands after the container is created - for example installing curl.
 	// "postCreateCommand": "apt install -y python-is-python3",
 	// "postCreateCommand": "apt-get update && apt-get install -y curl",
