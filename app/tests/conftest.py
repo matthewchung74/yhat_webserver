@@ -19,9 +19,9 @@ def storage():
     return my_storage
 
 
-@pytest.fixture(scope="module")
-def builder_job():
-    proc = Process(target=builder_server.start, args=(), daemon=False, name="rabbit")
-    proc.start()
-    yield
-    proc.terminate()
+# @pytest.fixture(scope="module")
+# def builder_job():
+#     proc = Process(target=builder_server.start, args=(), daemon=False, name="rabbit")
+#     proc.start()
+#     yield
+#     proc.terminate()

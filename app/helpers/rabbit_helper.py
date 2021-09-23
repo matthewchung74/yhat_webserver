@@ -26,7 +26,7 @@ async def get_connection(host: str, loop):
     )
 
 
-async def empty_queue(queue_name: str):
+async def empty_queue():
     connection = None
     try:
         connection = await get_connection(
@@ -34,9 +34,9 @@ async def empty_queue(queue_name: str):
         )
         channel = await connection.channel()
         queue = await channel.get_queue(settings.RABBIT_START_QUEUE_API)
-        await queue.delete(if_empty=False, if_unused=False)
+        await queue.purge()
         queue = await channel.get_queue(settings.RABBIT_CANCEL_QUEUE_API)
-        await queue.delete(if_empty=False, if_unused=False)
+        await queue.purge()
     except Exception as e:
         if str(type(e)) == "<class 'aiormq.exceptions.ChannelNotFoundEntity'>":
             pass

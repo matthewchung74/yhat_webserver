@@ -13,8 +13,9 @@ import os
 from app.helpers.logger import get_log
 
 from app.helpers.settings import settings
-from app.helpers.rabbit_helper import MessageState, empty_queue
-from app.helpers.boto_helper import get_s3_client
+from app.helpers.rabbit_helper import MessageState  # , empty_queue
+
+# from app.helpers.boto_helper import get_s3_client
 
 import nest_asyncio
 
@@ -36,35 +37,37 @@ async def client():
         yield client
 
 
+# @pytest.mark.asyncio
+# def test_s3_cleanup():
+#     async def async_main():
+#         await empty_queue(settings.RABBIT_START_QUEUE_API)
+#         await empty_queue(settings.RABBIT_CANCEL_QUEUE_API)
+#         try:
+#             bucket_key = settings.AWS_BUILD_LOG_BUCKET
+#             bucket = get_s3_client().Bucket(bucket_key)
+#             bucket.objects.all().delete()
+#         except Exception as e:
+#             if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
+#                 pass
+#             else:
+#                 raise
+
+#         try:
+#             bucket_key = settings.AWS_REQUESTS_LOG_BUCKET
+#             bucket = get_s3_client().Bucket(bucket_key)
+#             bucket.objects.all().delete()
+#         except Exception as e:
+#             if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
+#                 pass
+#             else:
+#                 raise
+
+#     asyncio.run(async_main())
+
+
 @pytest.mark.asyncio
-def test_s3_cleanup():
-    async def async_main():
-        await empty_queue(settings.RABBIT_START_QUEUE_API)
-        try:
-            bucket_key = settings.AWS_BUILD_LOG_BUCKET
-            bucket = get_s3_client().Bucket(bucket_key)
-            bucket.objects.all().delete()
-        except Exception as e:
-            if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
-                pass
-            else:
-                raise
-
-        try:
-            bucket_key = settings.AWS_REQUESTS_LOG_BUCKET
-            bucket = get_s3_client().Bucket(bucket_key)
-            bucket.objects.all().delete()
-        except Exception as e:
-            if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
-                pass
-            else:
-                raise
-
-    asyncio.run(async_main())
-
-
-@pytest.mark.asyncio
-async def test_create_builds(client, storage, builder_job):
+async def test_create_builds(client, storage):
+    # async def test_create_builds(client, storage, builder_job):
 
     # fetch me
     def mock_func(_):
