@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     LAMBDA_DEFAULT_MEMORY: str
     SENDER_EMAIL: str
     WEBSITE_URL: str
-    TEST_ALL_MODELS: bool
+    TEST_ALL_MODELS: Optional[bool]
 
 
 parameters = load()

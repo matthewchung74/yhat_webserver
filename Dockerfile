@@ -18,7 +18,6 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 RUN python3 -m pip install poetry
 
-
 RUN python3 -m pip install -U pip setuptools wheel requests
 RUN python3 -m pip install gunicorn uvloop httptools
 RUN python3 -m pip install uvicorn[standard]
@@ -42,7 +41,6 @@ COPY .vscode .vscode
 COPY app /app/app
 
 FROM builder as tester
-COPY .env.test .env.test
 COPY ./deployment_scripts/run_tests.sh ./deployment_scripts/run_tests.sh
 
 FROM builder as fastapi
