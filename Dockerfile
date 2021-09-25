@@ -45,3 +45,6 @@ COPY ./deployment_scripts/run_tests.sh ./deployment_scripts/run_tests.sh
 
 FROM builder as fastapi
 CMD ["pm2", "start", "python -m uvicorn app.api:app  --host 0.0.0.0 --port 8000", "--no-daemon"]
+
+FROM builder as docker_builder
+CMD ["pm2", "start", "python -m app.service.builder_server.builder_server", "--no-daemon"]
