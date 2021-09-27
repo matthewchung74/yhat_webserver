@@ -66,5 +66,8 @@ jobs:
           #   -v /var/run/docker.sock:/var/run/docker.sock \
           #   -p 22 \
           #   yhat_webserver:latest \
+
+          sudo su - ubuntu
+          . venv/bin/activate
           /bin/bash -c "./deployment_scripts/run_tests.sh"
           /bin/bash -c "./deployment_scripts/stop_tests.sh"
