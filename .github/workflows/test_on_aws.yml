@@ -35,6 +35,7 @@ jobs:
 
           echo "PARAM_STORE=/dev/env/settings/test" > .env.test
           echo "AWS_REGION_NAME=us-west-2" >> .env.test
+          cp .env.test .env
 
           sudo apt install -y nodejs npm 
           sudo npm install pm2 -g
@@ -69,5 +70,9 @@ jobs:
 
           sudo su - ubuntu
           . venv/bin/activate
-          /bin/bash -c "./deployment_scripts/run_tests.sh"
-          /bin/bash -c "./deployment_scripts/stop_tests.sh"
+          # /bin/bash -c "./deployment_scripts/run_tests.sh"
+          # /bin/bash -c "./deployment_scripts/stop_tests.sh"
+
+          pm2 start "python -m app.service.builder_server.builder_server" --name builder
+          python -m pytest -s
+          pm2 delete all
