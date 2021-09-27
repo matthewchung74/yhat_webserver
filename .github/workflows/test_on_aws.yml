@@ -36,9 +36,14 @@ jobs:
           echo "PARAM_STORE=/dev/env/settings/test" > .env.test
           echo "AWS_REGION_NAME=us-west-2" >> .env.test
 
-          DOCKER_BUILDKIT=1 docker build --target tester -t yhat_webserver -f Dockerfile .
+          sudo apt install -y python3.8-venv
+          python3 -m venv venv
+          . venv/bin/activate
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python3 -
+          export PATH=$PATH:$HOME/.poetry/bin
+          poetry install
+          sudo apt install -y awscli
 
-          # aws s3 cp "s3://yhat-param-test/.env.test" ".env.test"
           # https://dev.to/shree_j/how-to-install-and-run-psql-using-docker-41j2
           # https://codeburst.io/get-started-with-rabbitmq-on-docker-4428d7f6e46b
           # docker rm -f my-postgresql
@@ -51,11 +56,12 @@ jobs:
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
-          docker run --rm \
-            --privileged=true \
-            --env-file=.env.test \
-            --add-host=host.docker.internal:host-gateway \
-            -v /var/run/docker.sock:/var/run/docker.sock \
-            -p 22 \
-            yhat_webserver:latest \
-            /bin/bash -c "./deployment_scripts/run_tests.sh"
+          # docker run --rm \
+          #   --privileged=true \
+          #   --env-file=.env.test \
+          #   --add-host=host.docker.internal:host-gateway \
+          #   -v /var/run/docker.sock:/var/run/docker.sock \
+          #   -p 22 \
+          #   yhat_webserver:latest \
+          /bin/bash -c "./deployment_scripts/run_tests.sh"
+          /bin/bash -c "./deployment_scripts/stop_tests.sh"
