@@ -23,8 +23,8 @@ phases:
       - echo Build started on `date`
   post_build:
     commands:
-      - aws s3 cp "s3://inference-params-test/.env" ".env"
-      - aws s3 cp "s3://inference-params-test/.env.test" ".env.test"
+      - echo "PARAM_STORE=$PARAM_STORE" > .env
+      - echo "AWS_REGION_NAME=$REGION_NAME" >> .env
       - echo Build completed on `date`
 artifacts:
   files:
