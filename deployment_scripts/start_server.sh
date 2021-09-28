@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd /home/ubuntu/yhat
+
 if [ "$APPLICATION_NAME" == "YHatBuilder" ]
 then
     pm2 start "venv/bin/python -m app.service.builder_server.builder_server" --name builder
