@@ -11,8 +11,8 @@ hooks:
   ApplicationStart:
     - location: deployment_scripts/start_server.sh
       timeout: 300
-      runas: root
+      runas: ubutnu
   ApplicationStop:
     - location: deployment_scripts/stop_server.sh
       timeout: 300
-      runas: root
+      runas: ubutnu
