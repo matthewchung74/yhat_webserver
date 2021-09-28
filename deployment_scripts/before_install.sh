@@ -3,6 +3,7 @@
 apt install -y nodejs
 apt install -y npm
 npm install pm2 -g
+pm2 install pm2-logrotate
 
 sudo systemctl stop apache2
 
