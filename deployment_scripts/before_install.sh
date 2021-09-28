@@ -14,7 +14,7 @@ then
     sudo systemctl daemon-reload
     sudo systemctl restart docker
 
-    echo "Listen 8080" >> /etc/apache2/ports.conf
+    echo "Listen 8000" >> /etc/apache2/ports.conf
     
     sudo systemctl start apache2
 
