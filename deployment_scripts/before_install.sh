@@ -14,6 +14,8 @@ then
     sudo systemctl daemon-reload
     sudo systemctl restart docker
 
+    echo "Listen 8080" >> /etc/apache2/ports.conf
+    
     sudo systemctl start apache2
 
     $(aws ecr get-login --region us-east-1 --no-include-email)
