@@ -1,6 +1,8 @@
+#!/bin/bash
+
 apt install -y nodejs
 apt install -y npm
-npm install pm2@latest -g
+npm install pm2@latest
 
 sudo systemctl stop apache2
 
