@@ -11,13 +11,17 @@ echo "before_install $APPLICATION_NAME"
 
 if [ "$APPLICATION_NAME" == "YHatBuilder" ]
 then
+    sudo getent group docker || sudo groupadd docker
+    sudo usermod -aG docker ubuntu
+    newgrp docker
+    
     sudo apt install -y awscli
     echo '{"max-concurrent-uploads": 1 }' > /etc/docker/daemon.json
 
     sudo systemctl daemon-reload
     sudo systemctl restart docker
 
-    echo "Listen 8000" >> /etc/apache2/ports.conf
+    echo "Listen 8000" > /etc/apache2/ports.conf
     
     sudo systemctl start apache2
 
