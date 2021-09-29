@@ -10,13 +10,13 @@ sudo systemctl stop apache2
 echo "before_install $APPLICATION_NAME"
 
 if [ "$APPLICATION_NAME" == "YHatBuilder" ]
-then
+then    
+    sudo apt install -y awscli
+    echo '{"max-concurrent-uploads": 1 }' > /etc/docker/daemon.json
+
     sudo getent group docker || sudo groupadd docker
     sudo usermod -aG docker ubuntu
     newgrp docker
-    
-    sudo apt install -y awscli
-    echo '{"max-concurrent-uploads": 1 }' > /etc/docker/daemon.json
 
     sudo systemctl daemon-reload
     sudo systemctl restart docker
