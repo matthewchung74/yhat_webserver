@@ -16,7 +16,7 @@ phases:
       - python -m venv venv
       - . venv/bin/activate
       - poetry install --no-dev
-      - cp appspec-builder-dev.yml appspec.yml
+      # - cp appspec-builder-dev.yml appspec.yml
 
   build:
     commands:

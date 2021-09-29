@@ -7,6 +7,8 @@ pm2 install pm2-logrotate
 
 sudo systemctl stop apache2
 
+echo "before_install $APPLICATION_NAME"
+
 if [ "$APPLICATION_NAME" == "YHatBuilder" ]
 then
     sudo apt install -y awscli

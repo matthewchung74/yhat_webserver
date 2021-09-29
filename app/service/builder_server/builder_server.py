@@ -232,6 +232,8 @@ async def start_build_with_session(
             elif "\n" in message:
                 message = message.replace("\n", "\r\n")
 
+            get_log(name=__name__).info(message)
+            
             await send_to_queue(
                 channel=channel,
                 queue_name=queue_name,

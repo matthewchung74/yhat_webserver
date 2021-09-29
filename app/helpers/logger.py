@@ -18,22 +18,24 @@ def get_log(file: str = "log.txt", name: str = __file__):
 
     if c_handler == None:
         c_handler = logging.StreamHandler(sys.stderr)
+
+    c_handler = cast(logging.StreamHandler, c_handler)
+    c_handler.setLevel(logging.DEBUG)
+    c_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    c_handler.setFormatter(c_format)
+    logger.addHandler(c_handler)
+
+    if "local" not in os.getenv("PARAM_STORE"):
+        return logger
+
     if f_handler == None:
         f_handler = logging.FileHandler(file)
 
-    c_handler = cast(logging.StreamHandler, c_handler)
     f_handler = cast(logging.FileHandler, f_handler)
 
-    c_handler.setLevel(logging.DEBUG)
     f_handler.setLevel(logging.DEBUG)
 
-    c_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     f_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    c_handler.setFormatter(c_format)
     f_handler.setFormatter(f_format)
-
-    logger.addHandler(c_handler)
-
-    if "local" in os.getenv("PARAM_STORE"):
-        logger.addHandler(f_handler)
+    logger.addHandler(f_handler)
     return logger
