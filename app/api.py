@@ -64,7 +64,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:9000",
-        "http://inference-app.s3-website-us-west-2.amazonaws.com",
+        "http://yhat-dev-app.s3-website-us-west-2.amazonaws.com/",
     ],
     allow_credentials=True,
     allow_methods=["*"],
