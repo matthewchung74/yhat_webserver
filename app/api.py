@@ -64,7 +64,11 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://127.0.0.1:9000",
-        "http://yhat-dev-app.s3-website-us-west-2.amazonaws.com/",
+        "http://yhat-dev-app.s3-website-us-west-2.amazonaws.com",
+        "http://www.yhat.pub.s3-website-us-east-1.amazonaws.com",
+        "http://d39aurhbnpslhg.cloudfront.net",
+        "http://www.yhat.pub",
+        "http://yhat.pub",
     ],
     allow_credentials=True,
     allow_methods=["*"],
