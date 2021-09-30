@@ -21,12 +21,29 @@
             "jinja": true
         },
         {
+            "name": "Builder Unitest",
+            "type": "python",
+            "request": "launch",
+            "module": "app.service.builder_server.builder_server",
+            "justMyCode": true,
+            "envFile": "${workspaceFolder}/.env.test"
+        },
+        {
             "name": "FastAPI Unitest",
             "type": "python",
             "request": "launch",
             "module": "pytest",
             "justMyCode": true,
-            "args": []
+            "envFile": "${workspaceFolder}/.env.test"
         },
+    ],
+    "compounds": [
+        {
+            "name": "Server/Client/Unittest",
+            "configurations": [
+                "Builder Unitest",
+                "FastAPI Unitest"
+            ],
+        }
     ]
 }

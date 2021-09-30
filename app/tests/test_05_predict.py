@@ -89,14 +89,15 @@ async def test_predict_models(client, storage):
         signed_urls = storage["signed_urls"][i]
         run_id = storage["run_ids"][i]
         input_copy = copy.deepcopy(full_model.active_build.input_json)
+        pil_index = 0
         for index, (key, value) in enumerate(
             full_model.active_build.input_json.items()
         ):
             if FieldType.PIL == value in value:
                 # if FieldType.PIL == value or FieldType.OpenCV in value:
-                signed_url = signed_urls[index]["url"]
-                fields = signed_urls[index]["fields"]
-
+                signed_url = signed_urls[pil_index]["url"]
+                fields = signed_urls[pil_index]["fields"]
+                pil_index += 1
                 with open("app/tests/red.jpg", "rb") as f:
                     files = {"file": (key, f)}
                     response = requests.post(
@@ -108,6 +109,7 @@ async def test_predict_models(client, storage):
                     bucket = Path(signed_url).parts[1].split(".")[0]
                     s3_uri = f"s3://{bucket}/{fields['key']}"
                     input_copy[key] = s3_uri
+
 
         response = await client.post(
             f"/prediction/{model.id}?run_id={run_id}", json=input_copy, headers=headers

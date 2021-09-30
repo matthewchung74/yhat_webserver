@@ -116,7 +116,6 @@ async def get_me(
 @router.get("/{user_id}", response_model=schema.ProfileUser)
 async def get_profile(user_id: str, session: AsyncSession = Depends(get_session)):
     user: schema.User = await crud.get_user(session=session, user_id=user_id)
-    profile = schema.ProfileUser(**user.dict())
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

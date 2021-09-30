@@ -75,7 +75,7 @@ async def test_fetch_model_by_id(client, storage):
 
 
 @pytest.mark.asyncio
-async def test_me_models(client, storage, builder_job):
+async def test_me_models(client, storage):
 
     # fetch me
     def mock_func(_):

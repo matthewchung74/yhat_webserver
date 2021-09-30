@@ -1,12 +1,13 @@
 [tool.poetry]
-name = "inference_server"
+name = "yhat_webserver"
 version = "0.1.0"
 description = ""
 authors = ["Matthew Chung <matthewchung74@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-pip = "^21.1.3"
+python = "^3.9"
+pip = "^21.1.4"
+yhat_params = {git = "https://github.com/yhatpub/yhat_params.git", rev = "fa90b6a2ee4dad671767b7301fff91f54fdb7684"}
 fastapi = "^0.65.1"
 pydantic = "^1.8.2"
 uvicorn = "^0.14.0"
@@ -24,12 +25,12 @@ ipython = "^7.24.1"
 aiofiles = "^0.7.0"
 aio-pika = "^6.8.0"
 psycopg2-binary = "^2.9.1"
-yhat_params = {git = "https://github.com/yhatpub/yhat_params.git", rev = "main"}
 opencv-python-headless = "^4.5.2"
 Pillow = "^8.2.0"
 tqdm = "^4.61.1"
 websockets = "^9.1"
 nest-asyncio = "^1.5.1"
+gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
 pytest-asyncio = "^0.15.1"

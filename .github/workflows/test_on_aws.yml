@@ -33,6 +33,13 @@ jobs:
           sudo su - ubuntu
           sudo chmod 666 /var/run/docker.sock
 
+          echo "PARAM_STORE=/dev/env/settings/test" > .env.test
+          echo "AWS_REGION_NAME=us-west-2" >> .env.test
+          cp .env.test .env
+
+          sudo apt install -y nodejs npm 
+          sudo npm install pm2 -g
+
           sudo apt install -y python3.8-venv
           python3 -m venv venv
           . venv/bin/activate
@@ -50,13 +57,22 @@ jobs:
 
       - name: Test
         run: |
-          # https://docs.docker.com/engine/install/linux-postinstall/
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
+          # docker run --rm \
+          #   --privileged=true \
+          #   --env-file=.env.test \
+          #   --add-host=host.docker.internal:host-gateway \
+          #   -v /var/run/docker.sock:/var/run/docker.sock \
+          #   -p 22 \
+          #   yhat_webserver:latest \
 
           sudo su - ubuntu
-          docker run hello-world
           . venv/bin/activate
-          aws s3 cp "s3://yhat-param-test/.env.dev.test" ".env.test"
+          # /bin/bash -c "./deployment_scripts/run_tests.sh"
+          # /bin/bash -c "./deployment_scripts/stop_tests.sh"
+
+          pm2 start "python -m app.service.builder_server.builder_server" --name builder
           python -m pytest -s
+          pm2 delete all

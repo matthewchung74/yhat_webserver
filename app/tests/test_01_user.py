@@ -7,6 +7,8 @@ from app.auth import auth_bearer
 from app.helpers.settings import settings
 import pytest
 import sys
+from app.helpers.rabbit_helper import MessageState, empty_queue
+from app.helpers.boto_helper import get_s3_client
 
 from app.routers import user
 
@@ -33,6 +35,32 @@ async def delete_table(conn, table_name: str):
         else:
             raise
 
+
+@pytest.mark.asyncio
+def test_s3_cleanup():
+    async def async_main():
+        await empty_queue()
+        try:
+            bucket_key = settings.AWS_BUILD_LOG_BUCKET
+            bucket = get_s3_client().Bucket(bucket_key)
+            bucket.objects.all().delete()
+        except Exception as e:
+            if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
+                pass
+            else:
+                raise
+
+        try:
+            bucket_key = settings.AWS_REQUESTS_LOG_BUCKET
+            bucket = get_s3_client().Bucket(bucket_key)
+            bucket.objects.all().delete()
+        except Exception as e:
+            if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
+                pass
+            else:
+                raise
+
+    asyncio.run(async_main())
 
 @pytest.mark.asyncio
 def test_table_cleanup():

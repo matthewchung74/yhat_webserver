@@ -3,7 +3,7 @@ import functools
 from pathlib import Path
 import boto3
 import sys
-
+import os
 
 from botocore.exceptions import ClientError
 from app.helpers.asyncwrapper import async_wrap
@@ -12,14 +12,7 @@ import json
 from app.helpers.settings import settings
 from app.helpers.logger import get_log
 
-# https://stackoverflow.com/questions/1661275/disable-boto-logging-without-modifying-the-boto-files
-# import logging
-# logging.getLogger('boto3').setLevel(logging.CRITICAL)
-# logging.getLogger('botocore').setLevel(logging.CRITICAL)
-# logging.getLogger('s3transfer').setLevel(logging.CRITICAL)
-# logging.getLogger('urllib3').setLevel(logging.CRITICAL)
-# logging.getLogger('traitlets').setLevel(logging.CRITICAL)
-
+import boto3
 
 def get_ecr_private_client():
     ecr_private_client = None
