@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [dev]
+    branches: [dev, main]
   pull_request:
-    branches: [dev]
+    branches: [dev, main]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -48,30 +48,13 @@ jobs:
           poetry install
           sudo apt install -y awscli
 
-          # https://dev.to/shree_j/how-to-install-and-run-psql-using-docker-41j2
-          # https://codeburst.io/get-started-with-rabbitmq-on-docker-4428d7f6e46b
-          # docker rm -f my-postgresql
-          # docker rm -f my-rabbit
-          # docker run --name my-postgres -p 5432:5432 -e POSTGRES_PASSWORD=password -d postgres
-          # docker run --hostname my-rabbit -p 15672:15672 -p 5672:5672 -d rabbitmq:3-management
-
       - name: Test
         run: |
           sudo getent group docker || sudo groupadd docker
           sudo usermod -aG docker ubuntu
           newgrp docker
-          # docker run --rm \
-          #   --privileged=true \
-          #   --env-file=.env.test \
-          #   --add-host=host.docker.internal:host-gateway \
-          #   -v /var/run/docker.sock:/var/run/docker.sock \
-          #   -p 22 \
-          #   yhat_webserver:latest \
-
           sudo su - ubuntu
           . venv/bin/activate
-          # /bin/bash -c "./deployment_scripts/run_tests.sh"
-          # /bin/bash -c "./deployment_scripts/stop_tests.sh"
 
           pm2 start "python -m app.service.builder_server.builder_server" --name builder
           python -m pytest -s
