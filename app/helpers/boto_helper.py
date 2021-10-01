@@ -44,19 +44,19 @@ def get_ecr_public_client():
         )
 
 
-def get_s3_public_client():
-    if settings.AWS_ACCESS_KEY == None:
-        return boto3.resource(
-            "s3",
-            region_name=settings.AWS_REGION_NAME
-        )
-    else:
-        return boto3.resource(
-            "s3",
-            aws_access_key_id=settings.DOCKER_AWS_ACCESS_KEY,
-            aws_secret_access_key=settings.DOCKER_AWS_SECRET_KEY,
-            region_name=settings.AWS_REGION_NAME,
-        )
+# def get_s3_public_client():
+#     if settings.AWS_ACCESS_KEY == None:
+#         return boto3.resource(
+#             "s3",
+#             region_name=settings.AWS_REGION_NAME
+#         )
+#     else:
+#         return boto3.resource(
+#             "s3",
+#             aws_access_key_id=settings.DOCKER_AWS_ACCESS_KEY,
+#             aws_secret_access_key=settings.DOCKER_AWS_SECRET_KEY,
+#             region_name=settings.AWS_REGION_NAME,
+#         )
 
 
 def get_s3_client():
@@ -76,7 +76,9 @@ def get_s3_client():
 
 def get_lambda_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.client("lambda")
+        return boto3.client("lambda",
+                            region_name=settings.AWS_REGION_NAME,
+        )
     else:
         return boto3.client(
             "lambda",
