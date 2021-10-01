@@ -57,14 +57,14 @@ class Settings(BaseSettings):
     RABBIT_CANCEL_QUEUE_API: str
     RABBIT_CANCEL_QUEUE_BUILDER: str
 
-    AWS_ACCESS_KEY: str
-    AWS_SECRET_KEY: str
+    AWS_ACCESS_KEY: Optional[str]
+    AWS_SECRET_KEY: Optional[str]
     AWS_ACCOUNT_ID: str
     ECR_REPOSITORY_NAME: str
     AWS_BUILD_LOG_BUCKET: str
     AWS_REQUESTS_LOG_BUCKET: str
-    DOCKER_AWS_ACCESS_KEY: str
-    DOCKER_AWS_SECRET_KEY: str
+    DOCKER_AWS_ACCESS_KEY: Optional[str]
+    DOCKER_AWS_SECRET_KEY: Optional[str]
     DOCKER_AWS_IAM: str
     AWS_REGION_NAME: str
     LAMBDA_DEFAULT_MEMORY: str
