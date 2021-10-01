@@ -15,9 +15,11 @@ from app.helpers.logger import get_log
 import boto3
 
 def get_ecr_private_client():
-    ecr_private_client = None
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.client("ecr")
+        return boto3.client(
+            "ecr",
+            region_name=settings.AWS_REGION_NAME,
+        )
     else:
         return boto3.client(
             "ecr",
@@ -29,7 +31,10 @@ def get_ecr_private_client():
 
 def get_ecr_public_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.client("ecr-public")
+        return boto3.client(
+            "ecr-public",
+            region_name="us-east-1",
+        )
     else:
         return boto3.client(
             "ecr-public",
@@ -41,7 +46,10 @@ def get_ecr_public_client():
 
 def get_s3_public_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.resource("s3")
+        return boto3.resource(
+            "s3",
+            region_name=settings.AWS_REGION_NAME
+        )
     else:
         return boto3.resource(
             "s3",
@@ -53,7 +61,10 @@ def get_s3_public_client():
 
 def get_s3_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.resource("s3")
+        return boto3.resource(
+            "s3",
+            region_name=settings.AWS_REGION_NAME
+        )
     else:
         return boto3.resource(
             "s3",
@@ -77,7 +88,10 @@ def get_lambda_client():
 
 def get_ses_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.client("ses")
+        return boto3.client(
+            "ses",
+            region_name=settings.AWS_REGION_NAME,
+        )
     else:
         return boto3.client(
             "ses",
