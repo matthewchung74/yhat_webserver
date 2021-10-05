@@ -2,7 +2,7 @@
 name = "yhat_webserver"
 version = "0.1.0"
 description = ""
-authors = ["Matthew Chung <matthewchung74@gmail.com>"]
+authors = ["Matthew Chung <matt@yhat.pub>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
