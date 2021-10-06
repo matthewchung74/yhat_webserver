@@ -62,6 +62,7 @@ def test_s3_cleanup():
 
     asyncio.run(async_main())
 
+
 @pytest.mark.asyncio
 def test_table_cleanup():
     async def async_main():

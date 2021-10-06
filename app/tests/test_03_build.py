@@ -67,8 +67,6 @@ async def client():
 
 @pytest.mark.asyncio
 async def test_create_builds(client, storage):
-    # async def test_create_builds(client, storage, builder_job):
-
     # fetch me
     def mock_func(_):
         return "Bearer", storage["token"]
