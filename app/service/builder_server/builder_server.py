@@ -296,7 +296,7 @@ async def start_build_with_session(
         script_nb, script_py = await loop.run_in_executor(None, convert_to_py_partial)
 
         await log_output(
-            message=f"\r\nConverted {build.notebook} to python script",
+            message=f"\r\nConverted {build.notebook} to inference.ipynb and inference.py",
             state=MessageState.Running,
         )
 

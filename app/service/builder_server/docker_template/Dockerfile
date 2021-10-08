@@ -14,8 +14,8 @@ COPY ./app/inference.py \
 RUN ipython inference.ipynb
 RUN python inference.py
 
-# RUN chmod 644 $(find . -type f)
-# RUN chmod 755 $(find . -type d)
+RUN chmod 644 $(find . -type f)
+RUN chmod 755 $(find . -type d)
 
 CMD [ "app.handler" ]
 
