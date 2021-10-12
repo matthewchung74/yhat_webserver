@@ -266,6 +266,17 @@ ssh = ["paramiko (>=2.4.2)"]
 tls = ["pyOpenSSL (>=17.5.0)", "cryptography (>=3.4.7)", "idna (>=2.0.0)"]
 
 [[package]]
+name = "ec2-metadata"
+version = "2.5.0"
+description = "An easy interface to query the EC2 metadata API, with caching."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+requests = "*"
+
+[[package]]
 name = "entrypoints"
 version = "0.3"
 description = "Discover and load entry points from installed packages."
@@ -1218,7 +1229,7 @@ resolved_reference = "fa90b6a2ee4dad671767b7301fff91f54fdb7684"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "f43043e5d3f5e6acaeffc9c20f0f370bfa967f529309b499c8f89401749f001c"
+content-hash = "4d4fa96185d3e1688ca3b4a529574208b9add4a990db6d7a4d11c90b591c445e"
 
 [metadata.files]
 aio-pika = [
@@ -1367,6 +1378,10 @@ deprecated = [
 docker = [
     {file = "docker-5.0.2-py2.py3-none-any.whl", hash = "sha256:9b17f0723d83c1f3418d2aa17bf90b24dbe97deda06208dd4262fa30a6ee87eb"},
     {file = "docker-5.0.2.tar.gz", hash = "sha256:21ec4998e90dff7a7aaaa098ca8d839c7de412b89e6f6c30908372d58fecf663"},
+]
+ec2-metadata = [
+    {file = "ec2-metadata-2.5.0.tar.gz", hash = "sha256:4fcbdabd84da849fe087a39d2a722b3be50207f7b9f191197475a73f3120bec5"},
+    {file = "ec2_metadata-2.5.0-py3-none-any.whl", hash = "sha256:8fbfede6e7fc7f37104bda2f32c10982080620c6f396ba48c207714728e0feb5"},
 ]
 entrypoints = [
     {file = "entrypoints-0.3-py2.py3-none-any.whl", hash = "sha256:589f874b313739ad35be6e0cd7efde2a4e9b6fea91edcc34e58ecbb8dbe56d19"},

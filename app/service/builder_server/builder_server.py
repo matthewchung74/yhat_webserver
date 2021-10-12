@@ -19,6 +19,7 @@ from app.helpers.rabbit_helper import (
     send_to_queue,
 )
 import functools
+from threading import Thread
 from aio_pika.message import IncomingMessage
 
 import asyncio
@@ -36,6 +37,7 @@ from app.db import crud
 from app.helpers.settings import settings
 from app.service.builder_server import docker_builder, lambda_builder
 import shutil
+import boto3
 
 import sys
 from app.helpers.asyncwrapper import async_wrap
@@ -67,6 +69,7 @@ from app.helpers.file_helper import (
 )
 
 from app.helpers.email_helper import send_build_email
+from ec2_metadata import ec2_metadata
 
 cancel_list: List = []
 prefetch_count = 4
@@ -197,6 +200,52 @@ async def start_build(queue_name: str, build_id: str, build_index: int):
         )
 
 
+class LBTimer:
+    def __init__(self, start_channel):
+        Thread.__init__(self)
+        self.start_channel = start_channel
+        self._task = asyncio.ensure_future(self._job())
+
+    async def _job(self):
+        try:
+            if settings.LOAD_BALANCE_ARN == None:
+                get_log(name=__name__).info("LBTimer not running on AWS")
+                return
+
+            while True and settings.LOAD_BALANCE_ARN != None:
+                time.sleep(2)
+
+                from ec2_metadata import ec2_metadata
+
+                instance_id: str = ec2_metadata.instance_id
+                import boto3
+
+                client = boto3.client("elbv2", region_name=settings.AWS_REGION_NAME)
+
+                response = client.describe_target_groups(
+                    LoadBalancerArn=settings.LOAD_BALANCE_ARN
+                )
+                target_group_arn = response["TargetGroups"][0]["TargetGroupArn"]
+
+                response = client.describe_target_health(
+                    TargetGroupArn=target_group_arn
+                )
+
+                instances = map(
+                    lambda x: x["Target"]["Id"], response["TargetHealthDescriptions"]
+                )
+
+                if instance_id in list(instances):
+                    await self.start_channel.close()
+
+                get_log(name=__name__).info(
+                    f"builder {self.queue.name} not listening anymore since off LB"
+                )
+        except:
+            get_log(name=__name__).info("LBTimer not running on AWS")
+            pass
+
+
 async def start_build_with_session(
     queue_name: str,
     build_id: str,
@@ -233,7 +282,7 @@ async def start_build_with_session(
                 message = message.replace("\n", "\r\n")
 
             get_log(name=__name__).info(message)
-            
+
             await send_to_queue(
                 channel=channel,
                 queue_name=queue_name,
@@ -652,7 +701,9 @@ async def main(loop):
             durable=True,
         )
 
-        await start_queue.consume(on_message, no_ack=False, timeout=60 * 30)
+        consumer_tag = await start_queue.consume(
+            on_message, no_ack=False, timeout=60 * 30
+        )
 
         cancel_channel = await connection.channel()
         cancel_queue = await cancel_channel.declare_queue(
@@ -665,6 +716,8 @@ async def main(loop):
         )
         await cancel_queue.bind(cancel_exchange)
         await cancel_queue.consume(on_message, no_ack=False, timeout=60 * 30)
+
+        thread = LBTimer(start_channel, consumer_tag, loop)
 
         get_log(name=__name__).info(
             f"builder connected to {settings.RABBIT_HOST_BUILDER.split('@')[0]}://{settings.RABBIT_HOST_BUILDER.split('@')[-1]} listening for messages"
