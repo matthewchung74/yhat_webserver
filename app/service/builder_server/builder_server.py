@@ -245,7 +245,8 @@ class LBTimer:
                 get_log(name=__name__).info(f"instance_id {instance_id}")
 
                 for instance in list(instances):
-                    get_log(name=__name__).info(f"checking {instance}")
+                    get_log(name=__name__).info(f"checking {instance[0]}")
+                    get_log(name=__name__).info(f"checking {instance[1]}")
 
                     if instance_id == instance[0] and instance[1] == "draining":
                         await self.start_channel.close()
