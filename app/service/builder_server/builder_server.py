@@ -232,15 +232,21 @@ class LBTimer:
                 )
 
                 instances = map(
-                    lambda x: x["Target"]["Id"], response["TargetHealthDescriptions"]
+                    lambda x: (x["Target"]["Id"], x["TargetHealth"]["State"]),
+                    response["TargetHealthDescriptions"],
                 )
 
-                if instance_id in list(instances):
-                    await self.start_channel.close()
-                    get_log(name=__name__).info(f"builder instance {instance_id} not found in target group {list(instances)}")
-                    return
+                for instance in list(instances):
+                    if instance_id == instance[0] and instance[1] == "draining":
+                        await self.start_channel.close()
+                        get_log(name=__name__).info(
+                            f"builder instance {instance_id} not found in target group {list(instances)}"
+                        )
+                        return
                 else:
-                    get_log(name=__name__).info(f"builder instance {instance_id} in target group {list(instances)}")
+                    get_log(name=__name__).info(
+                        f"builder instance {instance_id} in target group {list(instances)}"
+                    )
         except:
             get_log(name=__name__).error(f"Error in LBTimer", exc_info=True)
             pass
