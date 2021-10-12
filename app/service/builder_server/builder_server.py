@@ -243,10 +243,10 @@ class LBTimer:
                             f"builder instance {instance_id} not found in target group {list(instances)}"
                         )
                         return
-                else:
-                    get_log(name=__name__).info(
-                        f"builder instance {instance_id} in target group {list(instances)}"
-                    )
+                    else:
+                        get_log(name=__name__).info(
+                            f"builder instance {instance_id} in target group {list(instances)}"
+                        )
         except:
             get_log(name=__name__).error(f"Error in LBTimer", exc_info=True)
             pass
