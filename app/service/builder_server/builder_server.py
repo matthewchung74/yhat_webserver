@@ -212,8 +212,8 @@ class LBTimer:
                 get_log(name=__name__).info("LBTimer not running on AWS")
                 return
 
-            while True and settings.LOAD_BALANCE_ARN != None:
-                time.sleep(2)
+            while settings.LOAD_BALANCE_ARN != None:
+                await asyncio.sleep(5)
 
                 from ec2_metadata import ec2_metadata
 
@@ -237,12 +237,12 @@ class LBTimer:
 
                 if instance_id in list(instances):
                     await self.start_channel.close()
-
-                get_log(name=__name__).info(
-                    f"builder {self.queue.name} not listening anymore since off LB"
-                )
+                    get_log(name=__name__).info(f"builder instance {instance_id} not found in target group {list(instances)}")
+                    return
+                else:
+                    get_log(name=__name__).info(f"builder instance {instance_id} in target group {list(instances)}")
         except:
-            get_log(name=__name__).info("LBTimer not running on AWS")
+            get_log(name=__name__).error(f"Error in LBTimer", exc_info=True)
             pass
 
 
