@@ -236,17 +236,27 @@ class LBTimer:
                     response["TargetHealthDescriptions"],
                 )
 
+                get_log(name=__name__).info(f"instances {list(instances)}")
+
+                get_log(name=__name__).info(f"instancesid1 {list(instances)[0][0]}")
+
+                get_log(name=__name__).info(f"instancesid2 {list(instances)[0][1]}")
+
+                get_log(name=__name__).info(f"instance_id {instance_id}")
+
                 for instance in list(instances):
+                    get_log(name=__name__).info(f"checking {instance}")
+
                     if instance_id == instance[0] and instance[1] == "draining":
                         await self.start_channel.close()
                         get_log(name=__name__).info(
                             f"builder instance {instance_id} not found in target group {list(instances)}"
                         )
                         return
-                    else:
-                        get_log(name=__name__).info(
-                            f"builder instance {instance_id} in target group {list(instances)}"
-                        )
+
+                get_log(name=__name__).info(
+                    f"builder instance {instance_id} in target group {list(instances)}"
+                )
         except:
             get_log(name=__name__).error(f"Error in LBTimer", exc_info=True)
             pass
