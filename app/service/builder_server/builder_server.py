@@ -717,7 +717,7 @@ async def main(loop):
         await cancel_queue.bind(cancel_exchange)
         await cancel_queue.consume(on_message, no_ack=False, timeout=60 * 30)
 
-        thread = LBTimer(start_channel, consumer_tag, loop)
+        thread = LBTimer(start_channel)
 
         get_log(name=__name__).info(
             f"builder connected to {settings.RABBIT_HOST_BUILDER.split('@')[0]}://{settings.RABBIT_HOST_BUILDER.split('@')[-1]} listening for messages"
