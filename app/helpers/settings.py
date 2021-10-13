@@ -71,6 +71,7 @@ class Settings(BaseSettings):
     SENDER_EMAIL: str
     WEBSITE_URL: str
     TEST_ALL_MODELS: Optional[bool]
+    LOAD_BALANCE_ARN: Optional[str]
 
 
 parameters = load()
