@@ -107,6 +107,7 @@ class Model(Base):
     active_build = relationship("Build", foreign_keys=[active_build_id])
     title = Column(String, nullable=True, index=True)
     description = Column(String, nullable=True)
+    credits = Column(String, nullable=True)
     tags = Column(String, nullable=True)
     status = Column(String, nullable=True)
     created_at = Column("created_at", DateTime, default=func.now())

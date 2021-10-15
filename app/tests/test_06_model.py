@@ -102,6 +102,7 @@ async def test_me_models(client, storage):
     data: dict = {
         "title": "my new title",
         "description": "my new descirption",
+        "credits": "my new credits",
         "release_notes": "my new release notes",
     }
 
@@ -112,4 +113,5 @@ async def test_me_models(client, storage):
     my_model = schema.Model(**response.json())
     assert my_model.title == data["title"]
     assert my_model.description == data["description"]
+    assert my_model.credits == data["credits"]
     assert my_model.active_build.release_notes == data["release_notes"]

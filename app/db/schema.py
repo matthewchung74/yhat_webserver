@@ -156,6 +156,7 @@ class Model(BaseModel):
     notebook: str
     title: Optional[str]
     description: Optional[str]
+    credits: Optional[str]
     branch: Optional[str]
     commit: Optional[str]
     user_id: str
