@@ -189,7 +189,7 @@ async def start(websocket: WebSocket, session: AsyncSession):
             await websocket.send_text(
                 json.dumps(
                     {
-                        "message": f"Adding build to Queue",
+                        "message": f"ADDING BUILD TO QUEUE\r\n\r\n",
                         "state": MessageState.Started,
                     }
                 )

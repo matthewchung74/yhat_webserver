@@ -6,6 +6,9 @@ FROM public.ecr.aws/c6h1o1s4/inference_lambda_public:base_pytorch AS mybase
 # ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
 # RUN pip install --no-cache-dir  --upgrade --force-reinstall git+https://github.com/yhatpub/yhat_params.git@main
+
+RUN python -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" --upgrade pip
+
 COPY ./app/inference.py \
      ./app/inference.ipynb \
      ./app/app.py \

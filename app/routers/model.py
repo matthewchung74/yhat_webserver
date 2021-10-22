@@ -73,6 +73,8 @@ async def update_model(
     model_dict: dict = {}
     if "title" in params:
         model_dict["title"] = params["title"]
+    if "credits" in params:
+        model_dict["credits"] = params["credits"]
     if "description" in params:
         model_dict["description"] = params["description"]
 

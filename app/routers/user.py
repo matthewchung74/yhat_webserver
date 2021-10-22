@@ -84,11 +84,11 @@ async def user_login_github(
         session=session, github_user=github_user
     )
 
-    if not await crud.get_has_early_access(session=session, email=user.email):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid GitHub permissions",
-        )
+    # if not await crud.get_has_early_access(session=session, email=user.email):
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED,
+    #         detail="Invalid GitHub permissions",
+    #     )
 
     jwt_token = signJWT(user)
     csrf_token = signCSRF(user)

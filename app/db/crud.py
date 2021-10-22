@@ -77,7 +77,7 @@ async def get_build(
     notebook: Optional[str] = None,
     commit: Optional[str] = None,
     status: Optional[str] = None,
-) -> List[schema.Run]:
+) -> List[schema.Build]:
 
     where_list = []
     if model_id != None:

@@ -35,6 +35,7 @@ class GithubUser(BaseModel):
     github_username: Optional[str]
     type: UserType
     github_token: Optional[str]
+    early_access: Optional[bool]
 
     class Config:
         orm_mode = True
@@ -156,6 +157,7 @@ class Model(BaseModel):
     notebook: str
     title: Optional[str]
     description: Optional[str]
+    credits: Optional[str]
     branch: Optional[str]
     commit: Optional[str]
     user_id: str
