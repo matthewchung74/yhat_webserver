@@ -49,6 +49,7 @@ class User(Base):
     github_token = Column(String, nullable=True)
     type = Column(String, nullable=True)
     company = Column(String, nullable=True)
+    early_access = Column(Boolean, nullable=True)
     created_at = Column("created_at", DateTime, default=func.now())
     updated_at = Column("updated_at", DateTime, onupdate=func.now())
 

@@ -339,7 +339,7 @@ async def start_build_with_session(
         s3_base_url = f"s3://{settings.AWS_BUILD_LOG_BUCKET}/{build.id}"
 
         await log_output(
-            message=f"\r\n{STARTING_BUILD_FOR} {build.notebook}\r\n",
+            message=f"\r\n{STARTING_BUILD_FOR} {build.notebook}\r\nCOMMIT {build.commit}\r\nBUILD_ID:{build.id}\r\n\r\n",
             state=MessageState.Running,
         )
 
