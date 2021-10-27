@@ -35,8 +35,10 @@ async def empty_queue():
         channel = await connection.channel()
         queue = await channel.get_queue(settings.RABBIT_START_QUEUE_API)
         await queue.purge()
+        # await queue.delete(if_empty=False, if_unused=False)
         queue = await channel.get_queue(settings.RABBIT_CANCEL_QUEUE_API)
         await queue.purge()
+        # await queue.delete(if_empty=False, if_unused=False)
     except Exception as e:
         if str(type(e)) == "<class 'aiormq.exceptions.ChannelNotFoundEntity'>":
             pass

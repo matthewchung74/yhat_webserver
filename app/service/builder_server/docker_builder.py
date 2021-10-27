@@ -266,7 +266,7 @@ def test_build_docker(
                     "AWS_ACCESS_KEY": settings.DOCKER_AWS_ACCESS_KEY,
                     "AWS_SECRET_KEY": settings.DOCKER_AWS_SECRET_KEY,
                     "AWS_REGION_NAME": settings.AWS_REGION_NAME,
-                    "AWS_REQUEST_BUCKET": settings.AWS_BUILD_LOG_BUCKET,
+                    "AWS_REQUEST_BUCKET": settings.AWS_REQUESTS_LOG_BUCKET,
                 },
                 detach=True,
                 auto_remove=True,

@@ -52,17 +52,17 @@ async def client():
 #             else:
 #                 raise
 
-#         try:
-#             bucket_key = settings.AWS_REQUESTS_LOG_BUCKET
-#             bucket = get_s3_client().Bucket(bucket_key)
-#             bucket.objects.all().delete()
-#         except Exception as e:
-#             if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
-#                 pass
-#             else:
-#                 raise
+# try:
+#     bucket_key = settings.AWS_REQUESTS_LOG_BUCKET
+#     bucket = get_s3_client().Bucket(bucket_key)
+#     bucket.objects.all().delete()
+# except Exception as e:
+#     if str(type(e)) == "<class 'botocore.errorfactory.NoSuchBucket'>":
+#         pass
+#     else:
+#         raise
 
-#     asyncio.run(async_main())
+# asyncio.run(async_main())
 
 
 @pytest.mark.asyncio

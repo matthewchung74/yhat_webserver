@@ -55,7 +55,7 @@ def deploy_lambda(
             PackageType="Image",
             Tags=tags,
             Environment={
-                "Variables": {"AWS_REQUEST_BUCKET": "inference-imagebuilder-logs"}
+                "Variables": {"AWS_REQUEST_BUCKET": settings.AWS_REQUESTS_LOG_BUCKET}
             },
             Publish=True,
         )
