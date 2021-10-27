@@ -1,7 +1,6 @@
 from app.helpers.api_helper import ExceptionRoute
 from app.db.database import get_session
 from app.auth.auth_bearer import JWTBearer
-from typing import Coroutine
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List
@@ -137,6 +136,27 @@ async def get_notebook(
             name=notebook_path, contents=file_data
         )
         return notebook
+    except github.GithubException as e:
+        if e.status == status.HTTP_404_NOT_FOUND:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Notebook not found"
+            )
+
+        if e.status == status.HTTP_403_FORBIDDEN:
+            raise HTTPException(
+                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                detail="Notebook needs to be 1MB or less.",
+            )
+
+
+async def get_latest_commit(user: schema.User, build: schema.Build) -> str:
+    try:
+        g = github.Github(user.github_token)
+        repo = await async_wrap(g.get_repo)(
+            f"{user.github_username}/{build.repository}"
+        )
+        commit = repo.get_branch(build.branch).commit
+        return commit.sha
     except github.GithubException as e:
         if e.status == status.HTTP_404_NOT_FOUND:
             raise HTTPException(

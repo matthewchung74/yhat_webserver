@@ -85,10 +85,10 @@ async def test_create_builds(client, storage):
             "huggingface/question_answering_inference.ipynb",
         ]
     else:
-        notenooks = ["yolov5/unit_test_inference.ipynb"]
+        notenooks = ["notebooks/unit_tests/unit_test.ipynb"]
 
-    github_username = "mclabs74"
-    repository = "inference_nbs"
+    github_username = "yhatpub"
+    repository = "yhatpub"
     branch = "dev"
     storage["builds"] = []
     storage["models"] = []
@@ -110,12 +110,42 @@ async def test_create_builds(client, storage):
         assert response.json()["model_id"] != None
         build_id = response.json()["id"]
         model_id = response.json()["model_id"]
+
+    # now test updates
+    for notebook in notenooks:
+        data = {
+            "github_username": github_username,
+            "repository": repository,
+            "branch": branch,
+            "commit": "",
+            "notebook": notebook.replace("/", "|"),
+            "user_id": storage["user_id"],
+            "input_json": {"a": "b"},
+        }
+
+        response = await client.post("/build/", json=data, headers=headers)
+        assert response.status_code == 200
+        assert response.json()["id"] != None
+        assert response.json()["model_id"] != None
+        build_id = response.json()["id"]
+        model_id = response.json()["model_id"]
         storage["builds"].append(build_id)
         storage["models"].append(model_id)
 
 
 @pytest.mark.asyncio
 async def test_fetch_build(client, storage):
+
+    headers = {"Accept": "application/json"}
+
+    response = await client.get(f"/build/{storage['builds'][0]}", headers=headers)
+    assert response.status_code == 200
+    assert str(response.json()["id"]) == str(storage["builds"][0])
+    assert str(response.json()["status"]) == BuildStatus.NotStarted
+
+
+@pytest.mark.asyncio
+async def test_update_build(client, storage):
 
     headers = {"Accept": "application/json"}
 
