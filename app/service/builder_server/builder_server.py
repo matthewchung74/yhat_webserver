@@ -671,28 +671,33 @@ async def start_build_with_session(
 
 async def on_message(message: IncomingMessage):
     async with message.process():
-        get_log(name=__name__).info(f"received message {str(message.body)}")
+        try:
+            get_log(name=__name__).info(f"received message {str(message.body)}")
 
-        global build_count
-        build_count += 1
-        build_index = build_count % prefetch_count
+            global build_count
+            build_count += 1
+            build_index = build_count % prefetch_count
 
-        body = json.loads(message.body)
-        if "command" in body and body["command"] == "cancel":
-            Path(f"/tmp/{body['build_id']}").mkdir(parents=True, exist_ok=True)
-            cancel_file = Path(f"/tmp/{body['build_id']}/cancel.txt")
-            try:
-                async with aiofiles.open(cancel_file, "w") as out:
-                    await out.write("cancel")
-                    await out.flush()
-            except:
-                pass
-        else:
-            loop = asyncio.get_event_loop()
-            start_build_thread_partial = functools.partial(
-                start_build_thread, body=body, build_index=build_index
+            body = json.loads(message.body)
+            if "command" in body and body["command"] == "cancel":
+                Path(f"/tmp/{body['build_id']}").mkdir(parents=True, exist_ok=True)
+                cancel_file = Path(f"/tmp/{body['build_id']}/cancel.txt")
+                try:
+                    async with aiofiles.open(cancel_file, "w") as out:
+                        await out.write("cancel")
+                        await out.flush()
+                except:
+                    pass
+            else:
+                loop = asyncio.get_event_loop()
+                start_build_thread_partial = functools.partial(
+                    start_build_thread, body=body, build_index=build_index
+                )
+                await loop.run_in_executor(None, start_build_thread_partial)
+        except:
+            get_log(name=__name__).error(
+                f"builder:{str(message.body)} error", exc_info=True
             )
-            await loop.run_in_executor(None, start_build_thread_partial)
 
 
 async def main(loop):
