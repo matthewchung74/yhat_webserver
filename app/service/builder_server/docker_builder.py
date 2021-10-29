@@ -303,8 +303,9 @@ def test_build_docker(
         if "errorMessage" in response.json():
             stack_trace = "".join(response.json()["stackTrace"])
             stack_trace = stack_trace.replace("\n", "\r\n")
+            error_message = response.json()["errorMessage"].replace("\n", "\r\n")
             raise BuilderException(
-                message=response.json()["errorMessage"] + stack_trace,
+                message=error_message + stack_trace,
                 build_id=build_id,
             )
 
@@ -322,8 +323,9 @@ def test_build_docker(
         if "errorMessage" in response.json():
             stack_trace = "".join(response.json()["stackTrace"])
             stack_trace = stack_trace.replace("\n", "\r\n")
+            error_message = response.json()["errorMessage"].replace("\n", "\r\n")
             raise BuilderException(
-                message=response.json()["errorMessage"] + stack_trace,
+                message=error_message + stack_trace,
                 build_id=build_id,
             )
 
@@ -341,8 +343,9 @@ def test_build_docker(
         if "errorMessage" in response.json():
             stack_trace = "".join(response.json()["stackTrace"])
             stack_trace = stack_trace.replace("\n", "\r\n")
+            error_message = response.json()["errorMessage"].replace("\n", "\r\n")
             raise BuilderException(
-                message=response.json()["errorMessage"] + stack_trace,
+                message=error_message + stack_trace,
                 build_id=build_id,
             )
 

@@ -128,7 +128,6 @@ async def create(
         model_id=model_id,
         duration_ms=duration_ms,
         created_at=datetime.now(timezone.utc),
-        # created_at=datetime.now(),
     )
 
     run.add_signed_urls()

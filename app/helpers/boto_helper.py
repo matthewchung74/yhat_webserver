@@ -5,7 +5,7 @@ import boto3
 import sys
 import os
 
-from botocore.exceptions import ClientError
+from botocore.exceptions import ClientError, ReadTimeoutError
 from app.helpers.asyncwrapper import async_wrap
 import json
 
@@ -13,6 +13,7 @@ from app.helpers.settings import settings
 from app.helpers.logger import get_log
 
 import boto3
+
 
 def get_ecr_private_client():
     if settings.AWS_ACCESS_KEY == None:
@@ -44,27 +45,9 @@ def get_ecr_public_client():
         )
 
 
-# def get_s3_public_client():
-#     if settings.AWS_ACCESS_KEY == None:
-#         return boto3.resource(
-#             "s3",
-#             region_name=settings.AWS_REGION_NAME
-#         )
-#     else:
-#         return boto3.resource(
-#             "s3",
-#             aws_access_key_id=settings.DOCKER_AWS_ACCESS_KEY,
-#             aws_secret_access_key=settings.DOCKER_AWS_SECRET_KEY,
-#             region_name=settings.AWS_REGION_NAME,
-#         )
-
-
 def get_s3_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.resource(
-            "s3",
-            region_name=settings.AWS_REGION_NAME
-        )
+        return boto3.resource("s3", region_name=settings.AWS_REGION_NAME)
     else:
         return boto3.resource(
             "s3",
@@ -76,8 +59,9 @@ def get_s3_client():
 
 def get_lambda_client():
     if settings.AWS_ACCESS_KEY == None:
-        return boto3.client("lambda",
-                            region_name=settings.AWS_REGION_NAME,
+        return boto3.client(
+            "lambda",
+            region_name=settings.AWS_REGION_NAME,
         )
     else:
         return boto3.client(
@@ -192,7 +176,7 @@ async def invoke_lambda_function(
         duration_ms = int(body_json["duration ms"] * 1000)
         result_json = json.loads(body_json["result"])
         return result_json, duration_ms
-    except ClientError as e:
+    except (ClientError, ReadTimeoutError) as e:
         if alreadyTried:
             message = str(sys.exc_info()[1])
             get_log(name=__name__).error(str(message), exc_info=True)
