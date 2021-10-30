@@ -99,7 +99,7 @@ async def user_login_github(
     return schema.Token(token=jwt_token.token, user_id=user.id)
 
 
-@router.get("/me", response_model=schema.ProfileUser)
+@router.get("/me", response_model=schema.User)
 async def get_me(
     token: schema.Token = Depends(JWTBearer()),
     session: AsyncSession = Depends(get_session),
@@ -109,7 +109,6 @@ async def get_me(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    profile = schema.ProfileUser(**user.dict())
     return user
 
 

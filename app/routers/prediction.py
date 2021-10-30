@@ -11,7 +11,7 @@ from typer.params import Option
 from app.db.database import get_session
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-import datetime
+from datetime import datetime, timezone
 import copy
 import uuid
 from pathlib import Path
@@ -37,10 +37,12 @@ async def update_build_lastrun(
     duration_ms: int,
     session: AsyncSession,
 ):
+    # last_run = datetime.now()
+    last_run = datetime.now(timezone.utc)
     await crud.update_build(
         session=session,
         build_id=build_id,
-        update_values={"last_run": datetime.datetime.now()},
+        update_values={"last_run": last_run},
     )
 
     for key, value in input_json.items():
@@ -125,7 +127,7 @@ async def create(
         build_id=model.active_build_id,
         model_id=model_id,
         duration_ms=duration_ms,
-        created_at=datetime.datetime.now(),
+        created_at=datetime.now(timezone.utc),
     )
 
     run.add_signed_urls()

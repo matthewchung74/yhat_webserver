@@ -4,8 +4,6 @@ from app.helpers.api_helper import ExceptionRoute
 from typing import Dict, List
 from fastapi.exceptions import HTTPException
 from sqlalchemy.sql.functions import mode
-from starlette import status
-from fastapi import WebSocket
 from app.db.database import get_session
 from app.auth.auth_bearer import JWTBearer
 from fastapi import APIRouter, Depends, Body
@@ -18,6 +16,7 @@ from app.db import schema
 from app.db import crud
 
 from app.helpers.logger import get_log
+from app.routers.repository import get_latest_commit
 
 router = APIRouter(route_class=ExceptionRoute, prefix="/build", tags=["build"])
 
@@ -50,6 +49,11 @@ async def create_build(
             return running_builds[0]
 
     build.model_id = str(model.id)
+
+    if build.commit == None or build.commit == "":
+        new_commit: str = await get_latest_commit(user=user, build=build)
+        build.commit = new_commit
+
     build = await crud.create_build(session=session, build=build)
 
     return build

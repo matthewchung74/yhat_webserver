@@ -110,7 +110,6 @@ async def test_predict_models(client, storage):
                     s3_uri = f"s3://{bucket}/{fields['key']}"
                     input_copy[key] = s3_uri
 
-
         response = await client.post(
             f"/prediction/{model.id}?run_id={run_id}", json=input_copy, headers=headers
         )

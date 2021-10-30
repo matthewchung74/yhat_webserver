@@ -166,7 +166,7 @@ def start_build_thread(body: Dict, build_index: int):
 
     proc.start()
     # uncomment for rabbit acks
-    proc.join()
+    # proc.join()
 
 
 def start_build_sync(queue_name, build_id, build_index):
@@ -542,7 +542,7 @@ async def start_build_with_session(
         input_json = build.input_json
         myobj = sample_params_from_input_json(params=input_json)
         myobj["request_id"] = build_id
-        myobj["output_bucket_name"] = settings.AWS_BUILD_LOG_BUCKET
+        myobj["output_bucket_name"] = settings.AWS_REQUESTS_LOG_BUCKET
         function_params = {"body": myobj}
         await invoke_lambda_function(
             function_name=lambda_function_name, function_params=function_params
@@ -660,11 +660,6 @@ async def start_build_with_session(
                 await write_file_to_s3(
                     script_py, f"{build_id}/inference.py", settings.AWS_BUILD_LOG_BUCKET
                 )
-        except:
-            pass
-
-        try:
-            pass
         except:
             pass
 

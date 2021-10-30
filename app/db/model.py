@@ -3,7 +3,7 @@ import json
 from sqlalchemy import Column, String, Integer, DefaultClause, ForeignKey, text
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
-from sqlalchemy.sql.sqltypes import Boolean, DateTime
+from sqlalchemy.sql.sqltypes import Boolean, TIMESTAMP
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.types import TypeDecorator, VARCHAR
 from sqlalchemy.ext.mutable import MutableDict
@@ -50,8 +50,8 @@ class User(Base):
     type = Column(String, nullable=True)
     company = Column(String, nullable=True)
     early_access = Column(Boolean, nullable=True)
-    created_at = Column("created_at", DateTime, default=func.now())
-    updated_at = Column("updated_at", DateTime, onupdate=func.now())
+    created_at = Column("created_at", TIMESTAMP(timezone=True), default=func.now())
+    updated_at = Column("updated_at", TIMESTAMP(timezone=True), onupdate=func.now())
 
     def update_from_schema(self, user: schema.User):
         self.avatar_url = user.avatar_url
@@ -87,9 +87,9 @@ class Build(Base):
     docker_image_uri = Column(String, nullable=True)
     release_notes = Column(String, nullable=True)
     build_log = Column(String, nullable=True)
-    last_run = Column(DateTime, nullable=True)
-    created_at = Column("created_at", DateTime, default=func.now())
-    updated_at = Column("updated_at", DateTime, onupdate=func.now())
+    last_run = Column(TIMESTAMP(timezone=True), nullable=True)
+    created_at = Column("created_at", TIMESTAMP(timezone=True), default=func.now())
+    updated_at = Column("updated_at", TIMESTAMP(timezone=True), onupdate=func.now())
 
 
 class Model(Base):
@@ -111,8 +111,8 @@ class Model(Base):
     credits = Column(String, nullable=True)
     tags = Column(String, nullable=True)
     status = Column(String, nullable=True)
-    created_at = Column("created_at", DateTime, default=func.now())
-    updated_at = Column("updated_at", DateTime, onupdate=func.now())
+    created_at = Column("created_at", TIMESTAMP(timezone=True), default=func.now())
+    updated_at = Column("updated_at", TIMESTAMP(timezone=True), onupdate=func.now())
 
 
 class Run(Base):
@@ -124,10 +124,4 @@ class Run(Base):
     model_id = Column(UUID, ForeignKey("model.id"), nullable=False, index=True)
     build_id = Column(UUID, ForeignKey("build.id"), nullable=True, index=False)
     duration_ms = Column(Integer, nullable=True)
-    created_at = Column("created_at", DateTime, default=func.now())
-
-
-class EarlyAccess(Base):
-    # user is reserved in postgres, thus user_account
-    __tablename__ = "early_access"
-    email = Column(String, primary_key=True)
+    created_at = Column("created_at", TIMESTAMP(timezone=True), default=func.now())

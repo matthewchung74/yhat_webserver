@@ -26,5 +26,5 @@ then
     sudo systemctl start apache2
 
     $(aws ecr get-login --region us-east-1 --no-include-email)
-    docker pull public.ecr.aws/c6h1o1s4/inference_lambda_public:base_pytorch
+    docker pull public.ecr.aws/c6h1o1s4/yhat_lambda_public:latest
 fi

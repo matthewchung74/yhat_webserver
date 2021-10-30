@@ -24,5 +24,8 @@ RUN python3 -m pip install --no-cache-dir jupyter==1.0.0
 RUN python3 -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" boto3==1.18.6
 RUN python3 -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" PyYAML==5.4.1
 RUN python3 -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" tqdm==4.61.2
+RUN python -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" --upgrade pip
+RUN python -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" wheel
+RUN python3 -m pip install --no-cache-dir --compile --global-option=build_ext --global-option="-j 4" spacy==2.2.4
 
 FROM builder as builder_pip

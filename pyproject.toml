@@ -7,8 +7,8 @@ authors = ["Matthew Chung <matt@yhat.pub>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 pip = "^21.1.4"
-yhat_params = {git = "https://github.com/yhatpub/yhat_params.git", rev = "fa90b6a2ee4dad671767b7301fff91f54fdb7684"}
-fastapi = "^0.65.1"
+yhat_params = {git = "https://github.com/yhatpub/yhat_params.git", rev = "87c3422f3626eb05aa78b9fb730b1a779bf00098"}
+fastapi = "^0.70.0"
 pydantic = "^1.8.2"
 uvicorn = "^0.14.0"
 asyncpg = "^0.23.0"

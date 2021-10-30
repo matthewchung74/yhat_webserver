@@ -19,23 +19,6 @@ async def client():
         yield client
 
 
-async def delete_table(conn, table_name: str):
-    try:
-        result = await conn.execute(
-            sa.text(f"TRUNCATE TABLE {table_name}"),
-        )
-        result = await conn.execute(
-            sa.text(f"DROP TABLE {table_name}"),
-        )
-        await conn.commit()
-    except:
-        # table does not exist
-        if sys.exc_info()[0].code == "f405":  # type: ignore
-            pass
-        else:
-            raise
-
-
 @pytest.mark.asyncio
 def test_s3_cleanup():
     async def async_main():
@@ -61,6 +44,23 @@ def test_s3_cleanup():
                 raise
 
     asyncio.run(async_main())
+
+
+async def delete_table(conn, table_name: str):
+    try:
+        result = await conn.execute(
+            sa.text(f"TRUNCATE TABLE {table_name}"),
+        )
+        result = await conn.execute(
+            sa.text(f"DROP TABLE {table_name}"),
+        )
+        await conn.commit()
+    except:
+        # table does not exist
+        if sys.exc_info()[0].code == "f405":  # type: ignore
+            pass
+        else:
+            raise
 
 
 @pytest.mark.asyncio
@@ -97,36 +97,6 @@ def test_table_cleanup():
                 )
                 result = await conn.execute(
                     sa.text("DROP TABLE user_account"),
-                )
-                result = await conn.execute(
-                    sa.text("DROP TABLE early_access"),
-                )
-                await conn.commit()
-            except:
-                # table does not exist
-                if sys.exc_info()[0].code == "f405":
-                    pass
-                else:
-                    raise
-
-        await engine.dispose()
-
-    asyncio.run(async_main())
-
-
-@pytest.mark.asyncio
-def test_table_early_access(client):
-    async def async_main():
-        engine = create_async_engine(
-            settings.SQLALCHEMY_DATABASE_URI,
-            echo=False,
-        )
-        async with engine.connect() as conn:
-            try:
-                result = await conn.execute(
-                    sa.text(
-                        "INSERT INTO early_access (email) VALUES ('mclabs74@gmail.com')"
-                    ),
                 )
                 await conn.commit()
             except:

@@ -5,12 +5,12 @@ FROM public.ecr.aws/lts/ubuntu:20.04 AS builder
 
 WORKDIR /app
 
-RUN apt update && apt upgrade -y
-RUN apt install -y apt-transport-https ca-certificates curl software-properties-common
-RUN apt install -y -q build-essential python3-venv git
+# RUN apt update && apt upgrade -y
+# RUN apt install -y apt-transport-https ca-certificates curl software-properties-common
+# RUN apt install -y -q build-essential python3-venv git
 
-RUN apt install -y nodejs npm 
-RUN npm install pm2 -g
+# RUN apt install -y nodejs npm 
+# RUN npm install pm2 -g
 
 ENV VIRTUAL_ENV=/opt/venv
 RUN python3 -m venv $VIRTUAL_ENV
