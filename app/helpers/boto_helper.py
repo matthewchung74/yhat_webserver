@@ -182,16 +182,15 @@ async def invoke_lambda_function(
             get_log(name=__name__).error(str(message), exc_info=True)
             raise
         else:
+            get_log(name=__name__).exception(
+                "Couldn't invoke function %s, trying again.", function_name
+            )
+
             invoke_lambda_function(
                 function_name=function_name,
                 function_params=function_params,
                 alreadyTried=True,
             )
-
-            get_log(name=__name__).exception(
-                "Couldn't invoke function %s, trying again.", function_name
-            )
-            raise
 
 
 def create_presigned_url(bucket_name, object_name, expiration=604800):
