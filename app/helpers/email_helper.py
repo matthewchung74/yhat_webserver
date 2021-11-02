@@ -36,7 +36,8 @@ async def send_build_email(
             Build: {build.id.split("-")[0]}\n
             Notebook: {build.get_github_url()}\n\n
             Build Log: {build_log_url}\n
-            log link will be valid for 1 week
+            log link will be valid for 1 week\n\n
+            Respond to this email with the word cancel to opt out.
         """
         uploader_url = f"{settings.WEBSITE_URL}/profile/{user.id}"
         builder_url = f"{settings.WEBSITE_URL}/build_start/{build.id}"
@@ -48,7 +49,8 @@ async def send_build_email(
             Uploaded by: <a href='{uploader_url}'>{user.github_username}</a><br>
             Build: <a href='{builder_url}'>{build.id.split("-")[0]}</a><br>
             Build Log: <a href='{build_log_url}'>Download here</a><br>
-            (log link will be valid for 1 week)
+            (log link will be valid for 1 week)<br><br>
+            Respond to this email with the word cancel to opt out.
         """
         await boto_helper.send_email(
             to_address=user.email, sender=sender, subject=subject, text=text, html=html
