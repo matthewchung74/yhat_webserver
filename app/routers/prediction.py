@@ -1,13 +1,13 @@
+import sys
+
 from fastapi import BackgroundTasks
 from fastapi.param_functions import Body
 from sqlalchemy.sql.functions import user
-
 from app.helpers.boto_helper import invoke_lambda_function
 from app.auth.auth_bearer import JWTBearer
 from app.helpers.api_helper import ExceptionRoute
 
 from fastapi.exceptions import HTTPException
-from typer.params import Option
 from app.db.database import get_session
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -16,7 +16,6 @@ import copy
 import uuid
 from pathlib import Path
 from app.helpers.settings import settings
-import asyncio
 from app.db import schema
 from app.db import crud
 
@@ -100,9 +99,13 @@ async def create(
     function_params = {"body": input_json}
 
     function_name: str = model.active_build.lambda_function_arn
-    result, duration_ms = await invoke_lambda_function(
-        function_name=function_name, function_params=function_params
-    )
+    try:
+        result, duration_ms = await invoke_lambda_function(
+            function_name=function_name, function_params=function_params
+        )
+    except:
+        duration_ms = 0
+        result = {"error": str(sys.exc_info()[1]).split("\r\n")[0]}
 
     background_tasks.add_task(
         update_build_lastrun,
