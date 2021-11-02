@@ -186,7 +186,7 @@ async def invoke_lambda_function(
                 "Couldn't invoke function %s, trying again.", function_name
             )
 
-            invoke_lambda_function(
+            await invoke_lambda_function(
                 function_name=function_name,
                 function_params=function_params,
                 alreadyTried=True,
