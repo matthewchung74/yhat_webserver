@@ -166,7 +166,7 @@ def start_build_thread(body: Dict, build_index: int):
 
     proc.start()
     # uncomment for rabbit acks
-    # proc.join()
+    proc.join()
 
 
 def start_build_sync(queue_name, build_id, build_index):
@@ -687,7 +687,10 @@ async def on_message(message: IncomingMessage):
             start_build_thread_partial = functools.partial(
                 start_build_thread, body=body, build_index=build_index
             )
-            await loop.run_in_executor(None, start_build_thread_partial)
+            try:
+                await loop.run_in_executor(None, start_build_thread_partial)
+            except:
+                get_log(name=__name__).error(f"builder:{body} error", exc_info=True)
 
 
 async def main(loop):
