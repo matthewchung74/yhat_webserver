@@ -118,7 +118,10 @@ class Model(Base):
 class Run(Base):
     __tablename__ = "run"
     id = Column(UUID, primary_key=True)
-    user_id = Column(UUID, ForeignKey("user_account.id"), nullable=False, index=True)
+    user_id = Column(UUID, ForeignKey("user_account.id"), nullable=True, index=True)
+    github_username = Column(
+        String, ForeignKey("user_account.github_username"), nullable=True, index=True
+    )
     input_json = Column(json_type, nullable=True)
     output_json = Column(json_type, nullable=True)
     model_id = Column(UUID, ForeignKey("model.id"), nullable=False, index=True)

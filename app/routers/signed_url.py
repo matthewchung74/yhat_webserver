@@ -32,9 +32,7 @@ router = APIRouter(
 @router.post("/{model_id}", response_model=List[schema.JSONStructure])
 async def create(
     model_id: str,
-    background_tasks: BackgroundTasks,
     run_id: str,
-    token: schema.Token = Depends(JWTBearer()),
     session: AsyncSession = Depends(get_session),
 ):
     model: schema.Model = await crud.get_model_by_id(session=session, model_id=model_id)

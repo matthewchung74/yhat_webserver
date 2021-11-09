@@ -183,7 +183,8 @@ class Run(BaseModel):
     thumb_json: Optional[Dict]
     build_id: str
     model_id: str
-    user_id: str
+    user_id: Optional[str]
+    github_username: Optional[str]
     duration_ms: Optional[int]
     created_at: Optional[datetime]
 
