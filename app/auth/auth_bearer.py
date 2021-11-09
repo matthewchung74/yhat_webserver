@@ -28,9 +28,6 @@ class JWTBearer(HTTPBearer):
         super(JWTBearer, self).__init__(auto_error=auto_error)
 
     async def __call__(self, request: Request):
-
-        # csrf_scheme, csrf_token = get_cookies(request)
-
         credentials: Optional[HTTPAuthorizationCredentials] = await super(
             JWTBearer, self
         ).__call__(request)
@@ -39,22 +36,22 @@ class JWTBearer(HTTPBearer):
         else:
             credentials = cast(HTTPAuthorizationCredentials, credentials)
 
-        jwt_scheme = credentials.scheme
         jwt_token = credentials.credentials
-
-        # if csrf_token == None:
-        #     raise HTTPException(status_code=403, detail="Invalid authorization code.")
 
         if jwt_token == None:
             raise HTTPException(status_code=403, detail="Invalid authorization code.")
 
-        # if csrf_scheme != jwt_scheme or jwt_scheme == None:
-        #     raise HTTPException(status_code=403, detail="Invalid authorization code.")
-
         jwt_payload: schema.Token = decodeJWT(jwt_token)
-        # csrf_payload: schema.Token = decodeJWT(csrf_token)
-
-        # if jwt_payload.user_id != csrf_payload.user_id:
-        #     raise HTTPException(status_code=403, detail="Invalid authorization code.")
 
         return schema.Token(token=jwt_token, user_id=jwt_payload.user_id)
+
+
+class OptionalJWTBearer(JWTBearer):
+    def __init__(self, auto_error: bool = True):
+        super(JWTBearer, self).__init__(auto_error=auto_error)
+
+    async def __call__(self, request: Request):
+        try:
+            return await super().__call__(request=request)
+        except:
+            return None

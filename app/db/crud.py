@@ -286,6 +286,7 @@ async def update_model(
 async def create_run(
     session: AsyncSession,
     user_id: str,
+    github_username: Optional[str],
     run_id: str,
     input_json: dict,
     output_json: dict,
@@ -297,6 +298,7 @@ async def create_run(
         **{
             "id": run_id,
             "user_id": user_id,
+            "github_username": github_username,
             "input_json": input_json,
             "output_json": output_json,
             "model_id": model_id,

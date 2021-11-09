@@ -1,10 +1,11 @@
 import sys
+from typing import Optional
 
 from fastapi import BackgroundTasks
 from fastapi.param_functions import Body
 from sqlalchemy.sql.functions import user
 from app.helpers.boto_helper import invoke_lambda_function
-from app.auth.auth_bearer import JWTBearer
+from app.auth.auth_bearer import OptionalJWTBearer
 from app.helpers.api_helper import ExceptionRoute
 
 from fastapi.exceptions import HTTPException
@@ -27,7 +28,8 @@ router = APIRouter(
 
 
 async def update_build_lastrun(
-    user_id: str,
+    user_id: Optional[str],
+    github_username: Optional[str],
     run_id: str,
     model_id: str,
     build_id: str,
@@ -57,6 +59,7 @@ async def update_build_lastrun(
     await crud.create_run(
         session=session,
         user_id=user_id,
+        github_username=github_username,
         run_id=run_id,
         input_json=input_json,
         output_json=output_json,
@@ -72,10 +75,12 @@ async def create(
     background_tasks: BackgroundTasks,
     run_id: str,
     payload: dict = Body(...),
-    token: schema.Token = Depends(JWTBearer()),
+    token: Optional[schema.Token] = Depends(OptionalJWTBearer()),
     session: AsyncSession = Depends(get_session),
 ):
-    user_id = str(token.user_id)
+    user = None
+    if token != None:
+        user: schema.User = await crud.get_user(session=session, user_id=token.user_id)
 
     model: schema.Model = await crud.get_model_by_id(session=session, model_id=model_id)
     if not model:
@@ -109,7 +114,8 @@ async def create(
 
     background_tasks.add_task(
         update_build_lastrun,
-        user_id=user_id,
+        user_id=str(user.id) if user else None,
+        github_username=user.github_username if user else None,
         run_id=run_id,
         model_id=str(model.id),
         build_id=model.active_build_id,
@@ -124,7 +130,8 @@ async def create(
 
     run: schema.Run = schema.Run(
         id=run_id,
-        user_id=user_id,
+        user_id=str(user.id) if user else None,
+        github_username=user.github_username if user else None,
         input_json=input_json,
         output_json=output_json,
         build_id=model.active_build_id,
