@@ -6,6 +6,7 @@ import sys
 import os
 
 from botocore.exceptions import ClientError, ReadTimeoutError
+from fastapi import param_functions
 from app.helpers.asyncwrapper import async_wrap
 import json
 
@@ -158,21 +159,43 @@ async def invoke_lambda_function(
     function_name, function_params, alreadyTried=False
 ) -> tuple:
     try:
+        get_log(name=__name__).debug(
+            f"{function_name} params {param_functions} started"
+        )
+
         lambda_client = get_lambda_client()
+
+        get_log(name=__name__).debug(f"{function_name} got client")
+
         invoke_partial = functools.partial(
             lambda_client.invoke,
             FunctionName=function_name,
             Payload=json.dumps(function_params).encode(),
         )
+
+        get_log(name=__name__).debug(f"{function_name} partial")
+
         loop = asyncio.get_event_loop()
+
+        get_log(name=__name__).debug(f"{function_name} loop")
+
         response = await loop.run_in_executor(None, invoke_partial)
+
+        get_log(name=__name__).debug(f"{function_name} response")
+
         res_json = json.loads(response["Payload"].read().decode("utf-8"))
+
+        get_log(name=__name__).debug(f"{function_name} res_json {res_json}")
+
         if "errorMessage" in res_json:
             raise Exception(
                 res_json["errorMessage"] + "\r\n" + "\r\n".join(res_json["stackTrace"])
             )
 
         body_json = json.loads(res_json["body"])
+
+        get_log(name=__name__).debug(f"{function_name} body {body_json}")
+
         duration_ms = int(body_json["duration ms"] * 1000)
         result_json = json.loads(body_json["result"])
         return result_json, duration_ms
@@ -191,6 +214,10 @@ async def invoke_lambda_function(
                 function_params=function_params,
                 alreadyTried=True,
             )
+    except:
+        message = str(sys.exc_info()[1])
+        get_log(name=__name__).error(str(message), exc_info=True)
+        raise
 
 
 def create_presigned_url(bucket_name, object_name, expiration=604800):
