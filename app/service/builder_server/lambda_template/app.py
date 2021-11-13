@@ -5,7 +5,8 @@
 
 import logging
 import time
-logging.basicConfig(level = logging.INFO)
+
+logging.getLogger().setLevel(logging.INFO)
 logger = logging.getLogger()
 
 import os
@@ -18,10 +19,12 @@ from yhat_params.yhat_tools import (
 
 before_inference_load = time.time()
 from inference import predict
+
 logger.info(f"from inference ${time.time() - before_inference_load}")
 
 if os.path.isfile(".env"):
     from dotenv import load_dotenv
+
     load_dotenv()
 
 
@@ -87,8 +90,7 @@ def handler(event, context):
         params=body, object_prefix=request_id, bucket_name=output_bucket_name
     )
 
-    logger.info(f"convert_input_params ${time.time() - before_convert_input_params}")
-
+    logger.info(f"convert_input_params {time.time() - before_convert_input_params}")
 
     before_predict = time.time()
 
@@ -104,7 +106,9 @@ def handler(event, context):
         result=result, object_prefix=request_id, bucket_name=output_bucket_name
     )
 
-    logger.info(f"before_convert_output_params ${time.time() - before_convert_output_params}")
+    logger.info(
+        f"before_convert_output_params ${time.time() - before_convert_output_params}"
+    )
 
     return {
         "headers": {"Content-Type": "application/json"},
