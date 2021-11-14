@@ -3,6 +3,12 @@
 # debugpy.listen(5678)
 # debugpy.wait_for_client()
 
+import logging
+import time
+
+logging.getLogger().setLevel(logging.INFO)
+logger = logging.getLogger()
+
 import os
 import json
 import copy
@@ -10,8 +16,11 @@ from yhat_params.yhat_tools import (
     convert_input_params,
     convert_output_params,
 )
-from PIL import Image
+
+before_inference_load = time.time()
 from inference import predict
+
+logger.info(f"from inference ${time.time() - before_inference_load}")
 
 if os.path.isfile(".env"):
     from dotenv import load_dotenv
@@ -74,17 +83,31 @@ def handler(event, context):
                 ),
             }
 
+    before_convert_input_params = time.time()
+
     # convert and check input types before predict
     new_params = convert_input_params(
         params=body, object_prefix=request_id, bucket_name=output_bucket_name
     )
 
+    logger.info(f"convert_input_params {time.time() - before_convert_input_params}")
+
+    before_predict = time.time()
+
     # perform prediction
     result, duration = predict(body)
+
+    logger.info(f"predict ${time.time() - before_predict}")
+
+    before_convert_output_params = time.time()
 
     # convert and check output types before returning to client
     new_result = convert_output_params(
         result=result, object_prefix=request_id, bucket_name=output_bucket_name
+    )
+
+    logger.info(
+        f"before_convert_output_params ${time.time() - before_convert_output_params}"
     )
 
     return {
