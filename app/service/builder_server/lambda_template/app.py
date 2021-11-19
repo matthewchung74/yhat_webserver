@@ -20,7 +20,7 @@ from yhat_params.yhat_tools import (
 before_inference_load = time.time()
 from inference import predict
 
-logger.info(f"from inference ${time.time() - before_inference_load}")
+logger.info(f"from inference {time.time() - before_inference_load}")
 
 if os.path.isfile(".env"):
     from dotenv import load_dotenv
@@ -97,7 +97,7 @@ def handler(event, context):
     # perform prediction
     result, duration = predict(body)
 
-    logger.info(f"predict ${time.time() - before_predict}")
+    logger.info(f"predict {time.time() - before_predict}")
 
     before_convert_output_params = time.time()
 
@@ -107,7 +107,7 @@ def handler(event, context):
     )
 
     logger.info(
-        f"before_convert_output_params ${time.time() - before_convert_output_params}"
+        f"before_convert_output_params {time.time() - before_convert_output_params}"
     )
 
     return {

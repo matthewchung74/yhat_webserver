@@ -9,5 +9,5 @@ fi
 
 if [ "$APPLICATION_NAME" == "YHatFastApi" ]
 then
-    pm2 start "venv/bin/python -m uvicorn app.api:app  --host 0.0.0.0 --port 8000" --name fastapi
+    pm2 start "venv/bin/python -m uvicorn app.api:app  --host 0.0.0.0 --port 8000 --http h11 timeout-keep-alive 120" --name fastapi
 fi
