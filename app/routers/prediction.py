@@ -143,6 +143,7 @@ async def create(
     try:
         get_log(name=__name__).debug(f"{function_name} adding_signed_urls")
         run.add_signed_urls()
+        get_log(name=__name__).debug(f"{function_name} {run}")
         get_log(name=__name__).debug(f"{function_name} finished adding_signed_urls")
     except:
         message = str(sys.exc_info()[1])

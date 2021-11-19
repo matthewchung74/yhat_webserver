@@ -18,10 +18,10 @@ class ExceptionRoute(APIRoute):
                 duration = time.time() - before
                 response.headers["X-Response-Time"] = str(duration)
                 return response
-            except Exception as e:
+            except:
                 get_log(name=__name__).info(f"in custom_route_handler exception")
                 message = str(sys.exc_info()[1])
                 get_log(name=__name__).error(message, exc_info=True)
-                raise e
+                raise
 
         return custom_route_handler
